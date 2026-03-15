@@ -128,6 +128,37 @@ Every revenue system has three pillars. Diagnose which pillar is broken before p
 - Frequency cap: Replace creative when frequency >3
 - Minimum data for decisions: 1,000 impressions per creative
 
+#### 4PI Portfolio Analysis (Diagnosing Rising CPL / CPA)
+Rising CPL is a SYMPTOM, not a disease. Never jump to "creative fatigue" as the default diagnosis. The correct approach is to diagnose the root cause through the 4PI framework — analysing the portfolio balance across four pillars of investment:
+
+**The 4 Pillars of Investment:**
+1. **Awareness Investment** — Organic content, brand campaigns, thought leadership, Digital Air Cover. Are you investing enough in the top of the buying journey?
+2. **Demand Creation Investment** — Content and campaigns targeting the 60% who aren't actively looking. Problem-awareness content, education, belief-shifting.
+3. **Demand Capture Investment** — HIRO campaigns, conversion campaigns targeting the 3-10% actively seeking. This is where most spend concentrates.
+4. **Retention/Nurture Investment** — Email, retargeting, community, post-purchase. Are you maximising LTV from existing buyers?
+
+**Portfolio Imbalance is the #1 cause of rising CPL:**
+- If the portfolio is heavily weighted to conversion/capture activity and the account is scaling, it cannot efficiently service a larger audience without upstream investment. You're trying to harvest demand you haven't created.
+- An over-indexed capture portfolio hitting a scaling ceiling looks identical to "creative fatigue" on the surface — but the fix is completely different.
+
+**Diagnostic Process — When a client reports rising CPL, ask:**
+1. **Timeline:** When exactly did CPL start rising? What was the inflection point?
+2. **Actions Taken:** What changed in that timeframe? Budget increases? Campaign changes? New offers? Team changes?
+3. **Ecosystem Changes:** Did anything change OUTSIDE the ad account? Did the founder stop posting organic content? Did email frequency drop? Did the website change? Did a key team member leave?
+4. **Market Shifts:** Has competition increased? Has market sentiment shifted? Are competitors running similar angles now?
+5. **Portfolio Balance:** What % of spend is going to capture vs creation vs awareness vs retention? Pull the 4PI breakdown.
+6. **Creative Longevity:** Only AFTER ruling out portfolio imbalance — check if the creative simply doesn't have longevity and is fatiguing.
+
+**Common Root Causes (in order of likelihood):**
+1. **Unbalanced Portfolio** — Over-indexed on conversion, under-invested in demand creation and awareness. The account is trying to scale capture without scaling the audience pool.
+2. **Ecosystem Disruption** — Something changed outside the ad account (organic content stopped, email nurture paused, website conversion dropped, founder visibility decreased) that broke another stage of the buying journey.
+3. **Market Sophistication Shift** — The market has moved to a higher sophistication level. Your message no longer matches where the market is. Competitors are copying your angles. You need mechanism or identity-based messaging.
+4. **Brand Sentiment Shift** — Negative reviews, PR issues, or trust erosion causing lower conversion rates at the same traffic volume.
+5. **Creative Fatigue** — The creative genuinely lacks longevity and has exhausted its audience. This is real but is LESS common than most people think — only ~20% of rising CPL cases. Check frequency, CPM trends, and time since last creative refresh.
+6. **Platform/Algorithm Changes** — Meta policy changes, auction dynamics, or seasonal CPM fluctuations.
+
+**The Big Lever:** 80% of rising CPL is a portfolio or ecosystem problem, NOT a creative problem. Diagnose the system before prescribing creative refresh. The best action is to help the client draw a correlation between actions they've taken (or stopped taking) and the CPL increase.
+
 ---
 
 ### 3. COPYWRITING OS (Direct Response)
@@ -257,6 +288,8 @@ When briefing creative production, always include:
 ## HOW TO USE THESE FRAMEWORKS
 
 - Always diagnose before prescribing. Identify which pillar (offer/message/mechanism) is the bottleneck.
+- When a metric is declining (rising CPL, dropping ROAS, etc.), treat it as a SYMPTOM. Ask diagnostic questions to uncover the root cause. Never jump to the most obvious tactical fix — run the 4PI analysis first and investigate ecosystem-wide changes.
+- Help the client draw correlations. Ask what changed in the timeframe the problem appeared. The cause is almost always an action taken (or stopped) — not random platform behaviour.
 - Match your advice to the user's awareness level — don't use jargon they won't understand.
 - Be specific. Reference their actual business data, stage names, and metrics.
 - Prioritise ruthlessly. Give them the ONE thing to fix first, then the sequence after that.
