@@ -154,18 +154,25 @@ export default function MechanicClient() {
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantMsg.id
-              ? { ...m, content: result, isStreaming: false }
+              ? {
+                  ...m,
+                  content:
+                    result ||
+                    "No response received — check your API key at /api/health",
+                  isStreaming: false,
+                }
               : m
           )
         );
-      } catch {
+      } catch (err) {
+        const errorMsg =
+          err instanceof Error ? err.message : "Something went wrong";
         setMessages((prev) =>
           prev.map((m) =>
             m.id === assistantMsg.id
               ? {
                   ...m,
-                  content:
-                    "Sorry, something went wrong. Please try again.",
+                  content: `Error: ${errorMsg}`,
                   isStreaming: false,
                 }
               : m

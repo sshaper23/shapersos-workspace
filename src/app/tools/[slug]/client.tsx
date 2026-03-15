@@ -107,7 +107,13 @@ export default function ToolPageClient({ params }: { params: Promise<{ slug: str
       setMessages((prev) =>
         prev.map((m) =>
           m.id === assistantMsg.id
-            ? { ...m, content: result, isStreaming: false }
+            ? {
+                ...m,
+                content:
+                  result ||
+                  "No response received — check your API key at /api/health",
+                isStreaming: false,
+              }
             : m
         )
       );
@@ -115,11 +121,13 @@ export default function ToolPageClient({ params }: { params: Promise<{ slug: str
       if (tool) {
         addRecentActivity({ type: "tool", name: tool.name, slug: tool.slug, action: "Generated" });
       }
-    } catch {
+    } catch (err) {
+      const errorMsg =
+        err instanceof Error ? err.message : "An error occurred";
       setMessages((prev) =>
         prev.map((m) =>
           m.id === assistantMsg.id
-            ? { ...m, content: "An error occurred. Please try again.", isStreaming: false }
+            ? { ...m, content: `Error: ${errorMsg}`, isStreaming: false }
             : m
         )
       );
