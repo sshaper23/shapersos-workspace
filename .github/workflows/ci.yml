@@ -1,0 +1,67 @@
+name: CI — Lint, Build & Skill Tests
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+env:
+  NODE_VERSION: "20"
+
+jobs:
+  # ─── Layer 1: Lint (catches hooks violations, type errors) ───
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      # Fail on errors (hooks violations, etc). Warnings are allowed for now.
+      - run: npx eslint src/
+
+  # ─── Layer 2: Build (catches compile errors before deploy) ───
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: lint
+    env:
+      # Dummy values so Next.js build doesn't fail on missing env vars.
+      # These are NOT real secrets — just placeholders for static analysis.
+      NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_placeholder
+      CLERK_SECRET_KEY: sk_test_placeholder
+      ANTHROPIC_API_KEY: sk-ant-placeholder
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      - run: npx next build
+
+  # ─── Layer 3: Skill quality tests (catches bad AI responses) ───
+  # Only runs on push to main (after deploy) since it needs the live API.
+  skill-tests:
+    name: Skill Quality Tests
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    env:
+      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+      - run: npm ci
+      # Wait briefly for Vercel auto-deploy to propagate
+      - name: Wait for deployment
+        run: sleep 30
+      - name: Run skill quality tests
+        run: npx tsx scripts/test-skills.ts https://workspace.shapersos.com

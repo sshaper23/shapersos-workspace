@@ -131,17 +131,7 @@ export function AlignmentChat({ mechanism, defaultExpanded = false }: AlignmentC
   const { saveAlignmentAnalysis, clearAlignmentAnalysis, getAlignmentAnalysis, addRecentActivity } = useApp();
   const { canAccessFeature } = useTier();
 
-  if (!canAccessFeature("alignmentAnalysis")) {
-    return (
-      <div className="mt-8">
-        <h2 className="text-base font-semibold mb-4 flex items-center gap-2">
-          <BarChart3 className="h-4 w-4 text-[#0ea5e9]" />
-          Revenue Alignment Analysis
-        </h2>
-        <UpgradeGate feature="alignmentAnalysis" inline />
-      </div>
-    );
-  }
+  // ALL hooks must be called unconditionally (React Rules of Hooks).
   const [isExpanded, setIsExpanded] = useState(defaultExpanded);
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
@@ -347,6 +337,20 @@ export function AlignmentChat({ mechanism, defaultExpanded = false }: AlignmentC
   const hasMessages = messages.length > 0;
 
   // ─── Score Color ───
+
+  // ── Render logic (no hooks below this line) ──
+
+  if (!canAccessFeature("alignmentAnalysis")) {
+    return (
+      <div className="mt-8">
+        <h2 className="text-base font-semibold mb-4 flex items-center gap-2">
+          <BarChart3 className="h-4 w-4 text-[#0ea5e9]" />
+          Revenue Alignment Analysis
+        </h2>
+        <UpgradeGate feature="alignmentAnalysis" inline />
+      </div>
+    );
+  }
 
   const getScoreColor = (score: number) => {
     if (score >= 80) return "text-green-400";
