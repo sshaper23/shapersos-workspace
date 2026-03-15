@@ -259,7 +259,7 @@ export function SafeUserButton({
 }: {
   appearance?: Record<string, unknown>;
 }) {
-  const { isClerkLoaded } = useAuthState();
+  const { isClerkLoaded, clerkUser } = useAuthState();
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [UserBtn, setUserBtn] = useState<any>(null);
 
@@ -271,12 +271,24 @@ export function SafeUserButton({
     }
   }, [isClerkLoaded]);
 
-  if (UserBtn) return <UserBtn appearance={appearance} />;
+  if (UserBtn) {
+    return (
+      <UserBtn
+        afterSignOutUrl="/sign-in"
+        appearance={appearance}
+      />
+    );
+  }
 
-  // Guest mode fallback
+  // Guest/loading fallback — show user initial if known, otherwise "G"
+  const initial =
+    clerkUser.user?.firstName?.[0] ||
+    clerkUser.user?.fullName?.[0] ||
+    "G";
+
   return (
     <div className="h-8 w-8 rounded-full bg-[hsl(0_0%_100%/0.08)] flex items-center justify-center">
-      <span className="text-xs text-[hsl(0_0%_100%/0.4)]">G</span>
+      <span className="text-xs text-[hsl(0_0%_100%/0.4)]">{initial}</span>
     </div>
   );
 }
