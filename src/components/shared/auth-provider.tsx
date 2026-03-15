@@ -232,6 +232,18 @@ export function SafeAuthGate({
   }
 
   const isSignedIn = !!clerkUser.user;
+
+  // Redirect unauthenticated users to /sign-in (client-side).
+  // Middleware is permissive so Clerk sets up auth state without blocking.
+  useEffect(() => {
+    if (when === "signed-in" && !isSignedIn && typeof window !== "undefined") {
+      const path = window.location.pathname;
+      if (path !== "/sign-in" && !path.startsWith("/sign-in/")) {
+        window.location.href = "/sign-in";
+      }
+    }
+  }, [when, isSignedIn]);
+
   if (when === "signed-in" && isSignedIn) return <>{children}</>;
   if (when === "signed-out" && !isSignedIn) return <>{children}</>;
   return null;
