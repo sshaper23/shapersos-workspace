@@ -12,23 +12,22 @@ const isPublicRoute = createRouteMatcher([
  * When Clerk keys are configured, enforce auth on all non-public routes.
  * When keys are missing (preview / guest mode), pass through without auth.
  *
- * Uses auth() + redirectToSignIn() instead of auth.protect() to ensure
- * unauthenticated users are redirected to /sign-in rather than seeing a 404.
+ * Passes signInUrl to clerkMiddleware options so auth.protect() redirects
+ * to /sign-in instead of returning a 404 protect-rewrite.
  */
 const hasClerkKeys =
   !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
   !!process.env.CLERK_SECRET_KEY;
 
 const clerkHandler = hasClerkKeys
-  ? clerkMiddleware(async (auth, req) => {
-      if (!isPublicRoute(req)) {
-        const { userId } = await auth();
-        if (!userId) {
-          const signInUrl = new URL("/sign-in", req.url);
-          return NextResponse.redirect(signInUrl);
+  ? clerkMiddleware(
+      async (auth, req) => {
+        if (!isPublicRoute(req)) {
+          await auth.protect();
         }
-      }
-    })
+      },
+      { signInUrl: "/sign-in", signUpUrl: "/sign-in" }
+    )
   : undefined;
 
 export default function middleware(req: NextRequest) {
