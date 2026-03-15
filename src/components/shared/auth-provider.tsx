@@ -179,12 +179,31 @@ export function SafeAuthGate({
   const { isClerkLoaded, clerkUser } = useAuthState();
   const [timedOut, setTimedOut] = useState(false);
 
-  // If Clerk is loaded but useUser() hasn't resolved in 10s, assume a problem
+  const isSignedIn = isClerkLoaded && clerkUser.isLoaded && !!clerkUser.user;
+  const isAuthResolved = isClerkLoaded && clerkUser.isLoaded;
+
+  // ALL hooks must be called unconditionally (React Rules of Hooks).
+
+  // Timeout: if Clerk loaded but useUser() hasn't resolved in 10s, assume a problem.
   useEffect(() => {
     if (!isClerkLoaded || clerkUser.isLoaded) return;
     const timer = setTimeout(() => setTimedOut(true), 10_000);
     return () => clearTimeout(timer);
   }, [isClerkLoaded, clerkUser.isLoaded]);
+
+  // Redirect unauthenticated users to /sign-in (client-side).
+  // Middleware is permissive so Clerk sets up auth state without blocking.
+  useEffect(() => {
+    if (!isAuthResolved) return;
+    if (when === "signed-in" && !isSignedIn && typeof window !== "undefined") {
+      const path = window.location.pathname;
+      if (path !== "/sign-in" && !path.startsWith("/sign-in/")) {
+        window.location.href = "/sign-in";
+      }
+    }
+  }, [when, isSignedIn, isAuthResolved]);
+
+  // ── Render logic (no hooks below this line) ──
 
   // Guest mode — show the full app UI
   if (!isClerkLoaded) {
@@ -230,19 +249,6 @@ export function SafeAuthGate({
     }
     return null;
   }
-
-  const isSignedIn = !!clerkUser.user;
-
-  // Redirect unauthenticated users to /sign-in (client-side).
-  // Middleware is permissive so Clerk sets up auth state without blocking.
-  useEffect(() => {
-    if (when === "signed-in" && !isSignedIn && typeof window !== "undefined") {
-      const path = window.location.pathname;
-      if (path !== "/sign-in" && !path.startsWith("/sign-in/")) {
-        window.location.href = "/sign-in";
-      }
-    }
-  }, [when, isSignedIn]);
 
   if (when === "signed-in" && isSignedIn) return <>{children}</>;
   if (when === "signed-out" && !isSignedIn) return <>{children}</>;
