@@ -56,7 +56,7 @@ export default function RootLayout({
               </div>
             </SafeAuthGate>
             <SafeAuthGate when="signed-out">
-              <div className="flex-1">{children}</div>
+              <div className="flex-1 h-full">{children}</div>
             </SafeAuthGate>
           </AppProvider>
         </SafeClerkProvider>

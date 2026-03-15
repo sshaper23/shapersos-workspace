@@ -27,7 +27,7 @@ export default function SignInPage() {
   // Loading state
   if (loading) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#060918]">
+      <div className="flex h-full w-full items-center justify-center bg-[#060918]">
         <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
       </div>
     );
@@ -36,7 +36,7 @@ export default function SignInPage() {
   // No Clerk key or failed to load — show fallback
   if (!SignInComponent) {
     return (
-      <div className="flex min-h-screen items-center justify-center bg-[#060918]">
+      <div className="flex h-full w-full items-center justify-center bg-[#060918]">
         <div className="rounded-xl border border-[hsl(0_0%_100%/0.08)] bg-[#0a0d1f] p-8 text-center max-w-sm">
           <h2 className="text-lg font-semibold text-white mb-2">Sign In</h2>
           <p className="text-sm text-[hsl(0_0%_100%/0.5)]">
@@ -48,7 +48,7 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-[#060918]">
+    <div className="flex h-full w-full items-center justify-center bg-[#060918]">
       <SignInComponent
         routing="path"
         path="/sign-in"
