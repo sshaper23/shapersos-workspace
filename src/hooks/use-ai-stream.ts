@@ -52,7 +52,17 @@ export function useAIStream(options?: UseAIStreamOptions) {
         });
 
         if (!res.ok) {
-          throw new Error(`API error: ${res.status}`);
+          // Try to extract error details from the response body
+          let errorDetail = "";
+          try {
+            const errJson = await res.json();
+            errorDetail = errJson.error || "";
+          } catch {
+            // ignore parse errors
+          }
+          throw new Error(
+            errorDetail || `API error: ${res.status} ${res.statusText}`
+          );
         }
 
         const contentType = res.headers.get("content-type") || "";
@@ -75,6 +85,10 @@ export function useAIStream(options?: UseAIStreamOptions) {
                 if (data === "[DONE]") break;
                 try {
                   const parsed = JSON.parse(data);
+                  // Handle server-sent error messages
+                  if (parsed.error) {
+                    throw new Error(parsed.error);
+                  }
                   if (parsed.text) {
                     fullContent += parsed.text;
                     setStreamedContent(fullContent);
@@ -93,8 +107,12 @@ export function useAIStream(options?: UseAIStreamOptions) {
                       timestamp: Date.now(),
                     });
                   }
-                } catch {
-                  // Skip malformed chunks
+                } catch (parseErr) {
+                  // Re-throw if it's our error message, otherwise skip malformed chunks
+                  if (parseErr instanceof Error && parseErr.message.startsWith("Invalid API key")) throw parseErr;
+                  if (parseErr instanceof Error && parseErr.message.startsWith("Model")) throw parseErr;
+                  if (parseErr instanceof Error && parseErr.message.startsWith("Rate limited")) throw parseErr;
+                  if (parseErr instanceof Error && parseErr.message.startsWith("API Error")) throw parseErr;
                 }
               }
             }

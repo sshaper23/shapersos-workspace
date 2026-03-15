@@ -142,6 +142,7 @@ export default function MechanicClient() {
         name: "Mechanic",
         slug: "mechanic",
         action: "Asked",
+        href: "/mechanic",
       });
 
       resetStream();

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from "next/server";
 import { LOCKED_MODEL } from "@/data/models";
 import { PLATFORM_SKILLS } from "@/data/platform-skills";
 
+// Allow up to 60 seconds for AI streaming responses (Vercel default is 10s)
+export const maxDuration = 60;
+
 const NOTION_API_KEY = process.env.NOTION_API_KEY;
 const NOTION_SKILLS_DB = process.env.NOTION_SKILLS_REGISTRY_DB;
 
@@ -194,6 +197,34 @@ export async function POST(req: NextRequest) {
             controller.close();
           } catch (err) {
             console.error("Streaming error:", err);
+            // Send error details to the client so it can display them
+            const errMsg =
+              err instanceof Error ? err.message : "Unknown streaming error";
+            const isAuthError =
+              errMsg.includes("401") ||
+              errMsg.includes("authentication") ||
+              errMsg.includes("invalid x-api-key") ||
+              errMsg.includes("Invalid API Key");
+            const isModelError =
+              errMsg.includes("model") || errMsg.includes("not found");
+            const isRateLimit =
+              errMsg.includes("429") || errMsg.includes("rate");
+
+            let userMessage = `API Error: ${errMsg}`;
+            if (isAuthError)
+              userMessage =
+                "Invalid API key — check your ANTHROPIC_API_KEY in Vercel environment variables and redeploy.";
+            else if (isModelError)
+              userMessage = `Model "${LOCKED_MODEL}" not available — check the model name in src/data/models.ts.`;
+            else if (isRateLimit)
+              userMessage =
+                "Rate limited by Anthropic — wait a moment and try again.";
+
+            controller.enqueue(
+              encoder.encode(
+                `data: ${JSON.stringify({ error: userMessage })}\n\n`
+              )
+            );
             controller.enqueue(encoder.encode("data: [DONE]\n\n"));
             controller.close();
           }

@@ -458,9 +458,11 @@ function RecentActivityStrip() {
             <Link
               key={item.id}
               href={
-                item.type === "tool"
-                  ? `/tools/${item.slug}`
-                  : `/playbooks/${item.slug}`
+                item.href
+                  ? item.href
+                  : item.type === "tool"
+                    ? `/tools/${item.slug}`
+                    : `/playbooks/${item.slug}`
               }
               className="group flex items-center gap-3 rounded-xl border border-[hsl(0_0%_100%/0.06)] bg-[hsl(0_0%_100%/0.02)] px-4 py-3 hover:border-[hsl(0_0%_100%/0.12)] hover:bg-[hsl(0_0%_100%/0.04)] transition-all"
             >
@@ -475,7 +477,7 @@ function RecentActivityStrip() {
                 <p className="text-sm font-medium truncate">{item.name}</p>
                 <p className="text-[11px] text-muted-foreground flex items-center gap-1.5">
                   <span>{item.action}</span>
-                  <span className="opacity-40">\u00B7</span>
+                  <span className="opacity-40">·</span>
                   <Clock className="h-2.5 w-2.5 inline" />
                   {timeAgo(item.timestamp)}
                 </p>

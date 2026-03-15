@@ -240,6 +240,8 @@ export interface RecentActivityItem {
   slug: string;
   action: string;
   timestamp: number;
+  /** Optional override href — used for features with non-standard routes (e.g. /mechanic) */
+  href?: string;
 }
 
 export interface TokenUsageRecord {

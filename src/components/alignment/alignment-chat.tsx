@@ -260,6 +260,7 @@ export function AlignmentChat({ mechanism, defaultExpanded = false }: AlignmentC
         name: "Alignment Analysis",
         slug: "alignment-analysis",
         action: "Analysed",
+        href: `/sales-mechanism/${mechanism.id}`,
       });
 
       resetStream();
