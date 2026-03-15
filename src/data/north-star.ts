@@ -2,8 +2,9 @@ export interface NorthStarField {
   key: string;
   label: string;
   notionProperty: string;
-  type: "text" | "textarea" | "url" | "email";
+  type: "text" | "textarea" | "url" | "email" | "select";
   placeholder: string;
+  options?: { value: string; label: string }[];
   required?: boolean;
   aiAssistable?: boolean;
   aiPrompt?: string;
@@ -12,7 +13,7 @@ export interface NorthStarField {
 export interface NorthStarSection {
   title: string;
   description: string;
-  emoji: string;
+  icon: string;
   fields: NorthStarField[];
 }
 
@@ -20,7 +21,7 @@ export const northStarSections: NorthStarSection[] = [
   {
     title: "About You",
     description: "Basic information about you and your company",
-    emoji: "👤",
+    icon: "user",
     fields: [
       {
         key: "name",
@@ -58,7 +59,7 @@ export const northStarSections: NorthStarSection[] = [
   {
     title: "Business Foundation",
     description: "Your mission, values, and what makes you different",
-    emoji: "🏗️",
+    icon: "layers",
     fields: [
       {
         key: "mission",
@@ -93,7 +94,7 @@ export const northStarSections: NorthStarSection[] = [
   {
     title: "Your Customer",
     description: "Deep understanding of who you serve",
-    emoji: "🎯",
+    icon: "target",
     fields: [
       {
         key: "icp",
@@ -143,9 +144,96 @@ export const northStarSections: NorthStarSection[] = [
     ],
   },
   {
+    title: "Business Model",
+    description: "How your business generates revenue — powers smarter AI metric suggestions",
+    icon: "building-2",
+    fields: [
+      {
+        key: "businessModelType",
+        label: "What type of business do you run?",
+        notionProperty: "Business Model Type",
+        type: "select",
+        placeholder: "Select your business model",
+        options: [
+          { value: "coaching", label: "Coaching / Consulting" },
+          { value: "agency", label: "Agency / Done-for-You Service" },
+          { value: "info-product", label: "Info Product / Course" },
+          { value: "saas", label: "SaaS / Software" },
+          { value: "ecommerce", label: "E-Commerce" },
+          { value: "local-service", label: "Local / Brick & Mortar Service" },
+          { value: "b2b-service", label: "B2B Professional Service" },
+          { value: "other", label: "Other" },
+        ],
+      },
+      {
+        key: "salesModel",
+        label: "How do you close sales?",
+        notionProperty: "Sales Model",
+        type: "select",
+        placeholder: "Select your primary sales model",
+        options: [
+          { value: "high-ticket-call", label: "High-Ticket Sales Call" },
+          { value: "application-close", label: "Application Funnel (Apply \u2192 Call \u2192 Close)" },
+          { value: "event-close", label: "Event-Based Close (Webinar / Workshop / Challenge)" },
+          { value: "self-serve", label: "Self-Serve Checkout" },
+          { value: "inbound-call", label: "Inbound Call / Inquiry" },
+          { value: "outbound-call", label: "Outbound Sales / SDR" },
+          { value: "product-led", label: "Product-Led / Free Trial" },
+          { value: "hybrid", label: "Hybrid / Multiple" },
+        ],
+      },
+      {
+        key: "primaryChannel",
+        label: "What is your primary acquisition channel?",
+        notionProperty: "Primary Acquisition Channel",
+        type: "select",
+        placeholder: "Select your main channel",
+        options: [
+          { value: "paid-social", label: "Paid Social (Meta, TikTok, etc.)" },
+          { value: "paid-search", label: "Paid Search (Google, Bing)" },
+          { value: "organic-social", label: "Organic Social Media" },
+          { value: "seo", label: "SEO / Organic Search" },
+          { value: "referral", label: "Referral / Word of Mouth" },
+          { value: "outbound", label: "Outbound (Cold Email, DM, LinkedIn)" },
+          { value: "partnerships", label: "Partnerships / JVs / Affiliates" },
+          { value: "events", label: "Events / Speaking" },
+          { value: "content-marketing", label: "Content Marketing (Podcast, YouTube, Blog)" },
+        ],
+      },
+      {
+        key: "industry",
+        label: "What industry are you in?",
+        notionProperty: "Industry",
+        type: "text",
+        placeholder: "e.g. Health & Fitness, B2B SaaS, Real Estate, Financial Services",
+      },
+      {
+        key: "avgDealSize",
+        label: "What is your average deal size / price point?",
+        notionProperty: "Average Deal Size",
+        type: "text",
+        placeholder: "e.g. $5,000, $47, $997/mo",
+      },
+      {
+        key: "salesCycleLength",
+        label: "How long is your typical sales cycle?",
+        notionProperty: "Sales Cycle Length",
+        type: "select",
+        placeholder: "Select typical timeline",
+        options: [
+          { value: "same-day", label: "Same Day / Impulse" },
+          { value: "1-7-days", label: "1\u20137 Days" },
+          { value: "1-4-weeks", label: "1\u20134 Weeks" },
+          { value: "1-3-months", label: "1\u20133 Months" },
+          { value: "3-plus-months", label: "3+ Months" },
+        ],
+      },
+    ],
+  },
+  {
     title: "Your Offer",
     description: "How you deliver value and the journey customers take",
-    emoji: "💎",
+    icon: "sparkles",
     fields: [
       {
         key: "offer",
@@ -167,17 +255,17 @@ export const northStarSections: NorthStarSection[] = [
       },
       {
         key: "testimonials",
-        label: "Share links to your best testimonials and social proof",
-        notionProperty: "Share links to your best testimonials and social proof",
+        label: "Share your best results and testimonials typed out here",
+        notionProperty: "Share your best results and testimonials typed out here",
         type: "textarea",
-        placeholder: "Links to testimonials, case studies, reviews, social proof...",
+        placeholder: "Type out your best client results, testimonials, case studies, and social proof...",
       },
     ],
   },
   {
     title: "Sales Intelligence",
     description: "Key insights that shape how you sell",
-    emoji: "🧠",
+    icon: "brain",
     fields: [
       {
         key: "obstacles",

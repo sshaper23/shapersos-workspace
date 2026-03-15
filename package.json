@@ -6,11 +6,19 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "build:static": "bash scripts/build-static.sh",
+    "deploy:staging": "npx netlify-cli deploy --build --dir=.next",
+    "deploy:prod": "npx netlify-cli deploy --build --prod --dir=.next"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.78.0",
+    "@clerk/nextjs": "^7.0.4",
+    "@netlify/plugin-nextjs": "^5.15.9",
     "@vercel/analytics": "^2.0.0",
     "clsx": "^2.1.1",
+    "docx": "^9.6.1",
+    "file-saver": "^2.0.5",
     "geist": "^1.7.0",
     "lucide-react": "^0.577.0",
     "next": "16.1.6",
@@ -22,6 +30,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/file-saver": "^2.0.7",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

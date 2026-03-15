@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import {
+  SafeClerkProvider,
+  SafeAuthGate,
+} from "@/components/shared/auth-provider";
+import { AppProvider } from "@/context/app-context";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Toolbar } from "@/components/layout/toolbar";
 import "./globals.css";
@@ -29,13 +34,32 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} h-screen overflow-hidden flex bg-background text-foreground antialiased`}
       >
-        <Sidebar />
-        <div className="flex-1 ml-16 flex flex-col overflow-hidden">
-          <Toolbar />
-          <main className="flex-1 overflow-auto">
-            {children}
-          </main>
-        </div>
+        <SafeClerkProvider
+          appearance={{
+            elements: {
+              userButtonPopoverCard:
+                "bg-[#0a0d1f] border-[hsl(0_0%_100%/0.08)]",
+              userButtonPopoverActionButton:
+                "text-[hsl(0_0%_100%/0.7)] hover:bg-[hsl(0_0%_100%/0.06)]",
+              userButtonPopoverActionButtonText: "text-[hsl(0_0%_100%/0.7)]",
+              userButtonPopoverActionButtonIcon: "text-[hsl(0_0%_100%/0.5)]",
+              userButtonPopoverFooter: "hidden",
+            },
+          }}
+        >
+          <AppProvider>
+            <SafeAuthGate when="signed-in">
+              <Sidebar />
+              <div className="flex-1 ml-16 flex flex-col overflow-hidden">
+                <Toolbar />
+                <main className="flex-1 overflow-auto">{children}</main>
+              </div>
+            </SafeAuthGate>
+            <SafeAuthGate when="signed-out">
+              {children}
+            </SafeAuthGate>
+          </AppProvider>
+        </SafeClerkProvider>
       </body>
     </html>
   );

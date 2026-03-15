@@ -4,4 +4,6 @@ export interface NavItem {
   icon: LucideIcon;
   href: string;
   label: string;
+  external?: boolean;
+  proOnly?: boolean;
 }

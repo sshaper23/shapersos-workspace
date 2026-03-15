@@ -18,6 +18,8 @@ export function Sidebar() {
             icon={item.icon}
             href={item.href}
             label={item.label}
+            external={item.external}
+            proOnly={item.proOnly}
           />
         ))}
       </nav>

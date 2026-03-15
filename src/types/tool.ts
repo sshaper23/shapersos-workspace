@@ -1,15 +1,14 @@
 export type ToolCategory =
-  | "market-research"
-  | "copywriting"
-  | "concept-creation"
-  | "sales-collateral"
-  | "ads"
+  | "demand-intelligence"
+  | "message-engineering"
+  | "offer-architecture"
+  | "sales-enablement"
+  | "demand-creation"
   | "sales"
   | "funnels"
   | "emails"
   | "content"
   | "webinar"
-  | "skool"
   | "course"
   | "website"
   | "legal"
@@ -27,7 +26,7 @@ export interface ToolField {
 export interface Tool {
   slug: string;
   name: string;
-  emoji: string;
+  icon: string;
   description: string;
   shortDescription: string;
   category: ToolCategory;

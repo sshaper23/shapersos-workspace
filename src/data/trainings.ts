@@ -1,7 +1,7 @@
 export interface Training {
   slug: string;
   title: string;
-  emoji: string;
+  icon: string;
   description: string;
   category: string;
   duration: string;
@@ -12,7 +12,7 @@ export const trainings: Training[] = [
   {
     slug: "meta-ads-fundamentals",
     title: "Meta Ads Fundamentals",
-    emoji: "📢",
+    icon: "megaphone",
     description: "Master the basics of Facebook and Instagram advertising from account setup to first campaign.",
     category: "Ads",
     duration: "2h 30m",
@@ -21,7 +21,7 @@ export const trainings: Training[] = [
   {
     slug: "high-ticket-closing",
     title: "High-Ticket Closing",
-    emoji: "💰",
+    icon: "dollar-sign",
     description: "Learn the psychology and frameworks behind closing $3K-$50K+ deals on the phone.",
     category: "Sales",
     duration: "3h 15m",
@@ -30,7 +30,7 @@ export const trainings: Training[] = [
   {
     slug: "funnel-architecture",
     title: "Funnel Architecture",
-    emoji: "🔧",
+    icon: "layers",
     description: "Design and build high-converting funnels from opt-in to checkout.",
     category: "Funnels",
     duration: "2h 45m",
@@ -39,7 +39,7 @@ export const trainings: Training[] = [
   {
     slug: "email-sequences-mastery",
     title: "Email Sequences Mastery",
-    emoji: "📧",
+    icon: "mail",
     description: "Write email sequences that nurture, convert, and retain customers on autopilot.",
     category: "Emails",
     duration: "2h",
@@ -48,7 +48,7 @@ export const trainings: Training[] = [
   {
     slug: "content-creation-system",
     title: "Content Creation System",
-    emoji: "✍️",
+    icon: "pen-tool",
     description: "Build a repeatable content engine that drives organic traffic and builds authority.",
     category: "Content",
     duration: "1h 45m",
@@ -57,7 +57,7 @@ export const trainings: Training[] = [
   {
     slug: "webinar-conversion",
     title: "Webinar Conversion Blueprint",
-    emoji: "🎙️",
+    icon: "mic",
     description: "Structure and deliver webinars that consistently convert at 10-20%+.",
     category: "Webinar",
     duration: "2h 30m",
@@ -66,7 +66,7 @@ export const trainings: Training[] = [
   {
     slug: "skool-community-launch",
     title: "Skool Community Launch",
-    emoji: "🏫",
+    icon: "users",
     description: "Launch and grow a profitable Skool community from zero to 1,000 members.",
     category: "Skool",
     duration: "1h 30m",
@@ -75,7 +75,7 @@ export const trainings: Training[] = [
   {
     slug: "course-creation",
     title: "Course Creation Masterclass",
-    emoji: "🎓",
+    icon: "book-open",
     description: "Plan, record, and launch an online course that sells itself.",
     category: "Course",
     duration: "3h",
@@ -84,7 +84,7 @@ export const trainings: Training[] = [
   {
     slug: "copywriting-foundations",
     title: "Copywriting Foundations",
-    emoji: "📝",
+    icon: "file-text",
     description: "Master direct response copywriting principles that drive action and revenue.",
     category: "Content",
     duration: "2h 15m",
@@ -93,7 +93,7 @@ export const trainings: Training[] = [
   {
     slug: "offer-creation",
     title: "Irresistible Offer Creation",
-    emoji: "🎯",
+    icon: "target",
     description: "Craft offers so good people feel stupid saying no. Value stacking, pricing, and positioning.",
     category: "Sales",
     duration: "1h 45m",
@@ -102,7 +102,7 @@ export const trainings: Training[] = [
   {
     slug: "lead-generation",
     title: "Lead Generation Playbook",
-    emoji: "🧲",
+    icon: "zap",
     description: "Multi-channel lead gen strategies from paid ads to organic and referral systems.",
     category: "Lead Hacker",
     duration: "2h",
@@ -111,7 +111,7 @@ export const trainings: Training[] = [
   {
     slug: "money-model-planning",
     title: "Money Model Planning",
-    emoji: "📊",
+    icon: "bar-chart",
     description: "Build financial models and revenue projections for your business.",
     category: "Money Model",
     duration: "1h 30m",
@@ -120,7 +120,7 @@ export const trainings: Training[] = [
   {
     slug: "vsl-creation",
     title: "VSL Creation Workshop",
-    emoji: "🎬",
+    icon: "video",
     description: "Write and produce Video Sales Letters that convert cold traffic into buyers.",
     category: "Sales",
     duration: "2h 30m",
@@ -129,7 +129,7 @@ export const trainings: Training[] = [
   {
     slug: "landing-page-design",
     title: "Landing Page Design",
-    emoji: "🖥️",
+    icon: "monitor-play",
     description: "Design landing pages that convert using proven layout patterns and copy frameworks.",
     category: "Website",
     duration: "2h",
@@ -138,7 +138,7 @@ export const trainings: Training[] = [
   {
     slug: "facebook-group-growth",
     title: "Facebook Group Growth",
-    emoji: "👥",
+    icon: "users",
     description: "Grow and monetize a Facebook group as a lead generation and community tool.",
     category: "Content",
     duration: "1h 15m",
@@ -147,7 +147,7 @@ export const trainings: Training[] = [
   {
     slug: "retargeting-strategies",
     title: "Retargeting Strategies",
-    emoji: "🎯",
+    icon: "crosshair",
     description: "Set up and optimize retargeting campaigns that recapture lost leads and sales.",
     category: "Ads",
     duration: "1h 30m",
@@ -156,7 +156,7 @@ export const trainings: Training[] = [
   {
     slug: "sales-call-frameworks",
     title: "Sales Call Frameworks",
-    emoji: "📞",
+    icon: "phone",
     description: "Proven call scripts and frameworks for discovery, demo, and closing calls.",
     category: "Sales",
     duration: "2h 15m",
@@ -165,7 +165,7 @@ export const trainings: Training[] = [
   {
     slug: "brand-positioning",
     title: "Brand Positioning",
-    emoji: "✨",
+    icon: "sparkles",
     description: "Position your brand to stand out, charge premium prices, and attract ideal clients.",
     category: "Content",
     duration: "1h 45m",
@@ -174,7 +174,7 @@ export const trainings: Training[] = [
   {
     slug: "automation-workflows",
     title: "Automation Workflows",
-    emoji: "⚡",
+    icon: "zap",
     description: "Automate repetitive tasks with Zapier, Make, and native integrations.",
     category: "Miscellaneous",
     duration: "2h",
@@ -183,7 +183,7 @@ export const trainings: Training[] = [
   {
     slug: "legal-essentials",
     title: "Legal Essentials for Entrepreneurs",
-    emoji: "⚖️",
+    icon: "shield",
     description: "Essential legal knowledge: contracts, terms of service, privacy policies, and compliance.",
     category: "Legal",
     duration: "1h 30m",
@@ -192,7 +192,7 @@ export const trainings: Training[] = [
   {
     slug: "scaling-ads",
     title: "Scaling Ads Profitably",
-    emoji: "📈",
+    icon: "trending-up",
     description: "Scale winning ad campaigns from $100/day to $10K+/day without killing performance.",
     category: "Ads",
     duration: "2h 45m",
@@ -201,7 +201,7 @@ export const trainings: Training[] = [
   {
     slug: "checkout-optimization",
     title: "Checkout Optimization",
-    emoji: "🛒",
+    icon: "tag",
     description: "Optimize your checkout flow to reduce cart abandonment and increase AOV.",
     category: "Funnels",
     duration: "1h 15m",
@@ -210,7 +210,7 @@ export const trainings: Training[] = [
   {
     slug: "ai-for-entrepreneurs",
     title: "AI for Entrepreneurs",
-    emoji: "🤖",
+    icon: "sparkles",
     description: "Leverage AI tools and workflows to 10x your productivity and output quality.",
     category: "Miscellaneous",
     duration: "2h",
