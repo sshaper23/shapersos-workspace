@@ -127,14 +127,59 @@ export function SafeAuthGate({
   children: ReactNode;
 }) {
   const { isClerkLoaded, clerkUser } = useAuthState();
+  const [timedOut, setTimedOut] = useState(false);
+
+  // If Clerk is loaded but useUser() hasn't resolved in 10s, assume a problem
+  useEffect(() => {
+    if (!isClerkLoaded || clerkUser.isLoaded) return;
+    const timer = setTimeout(() => setTimedOut(true), 10_000);
+    return () => clearTimeout(timer);
+  }, [isClerkLoaded, clerkUser.isLoaded]);
 
   // Guest mode — show the full app UI
   if (!isClerkLoaded) {
     return when === "signed-in" ? <>{children}</> : null;
   }
 
-  // Auth state still loading
-  if (!clerkUser.isLoaded) return null;
+  // Auth state still loading — show a loading spinner instead of a blank screen
+  if (!clerkUser.isLoaded) {
+    // Only show loading indicator for the "signed-in" gate (the main app shell).
+    // The "signed-out" gate (sign-in page wrapper) stays hidden while loading.
+    if (when === "signed-in") {
+      return (
+        <div className="flex h-screen w-full items-center justify-center bg-background">
+          <div className="flex flex-col items-center gap-3">
+            {!timedOut ? (
+              <>
+                <div
+                  className="h-8 w-8 rounded-full animate-spin"
+                  style={{
+                    border: "2px solid hsl(0 0% 100% / 0.1)",
+                    borderTopColor: "#0ea5e9",
+                  }}
+                />
+                <span className="text-xs text-muted-foreground">Loading…</span>
+              </>
+            ) : (
+              <>
+                <p className="text-sm text-muted-foreground text-center max-w-sm">
+                  Authentication is taking longer than expected. This may be a
+                  temporary DNS issue.
+                </p>
+                <button
+                  onClick={() => window.location.reload()}
+                  className="mt-2 px-4 py-2 rounded-lg bg-[#0ea5e9] text-white text-sm hover:bg-[#0ea5e9]/90 transition-colors"
+                >
+                  Reload page
+                </button>
+              </>
+            )}
+          </div>
+        </div>
+      );
+    }
+    return null;
+  }
 
   const isSignedIn = !!clerkUser.user;
   if (when === "signed-in" && isSignedIn) return <>{children}</>;
