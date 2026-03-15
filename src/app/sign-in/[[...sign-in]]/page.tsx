@@ -1,21 +1,39 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { Loader2 } from "lucide-react";
 
 export default function SignInPage() {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [SignInComponent, setSignInComponent] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
     if (key) {
-      import("@clerk/nextjs").then((mod) => {
-        setSignInComponent(() => mod.SignIn);
-      });
+      import("@clerk/nextjs")
+        .then((mod) => {
+          setSignInComponent(() => mod.SignIn);
+        })
+        .catch(() => {
+          // Clerk failed to load
+        })
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
   }, []);
 
-  // No Clerk key — show fallback
+  // Loading state
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-[#060918]">
+        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
+      </div>
+    );
+  }
+
+  // No Clerk key or failed to load — show fallback
   if (!SignInComponent) {
     return (
       <div className="flex min-h-screen items-center justify-center bg-[#060918]">
@@ -34,6 +52,8 @@ export default function SignInPage() {
       <SignInComponent
         routing="path"
         path="/sign-in"
+        signUpUrl="/sign-in"
+        fallbackRedirectUrl="/"
         appearance={{
           elements: {
             rootBox: "mx-auto",
