@@ -1,33 +1,23 @@
-import { clerkMiddleware, createRouteMatcher } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 
 /**
- * Middleware strategy:
+ * Minimal passthrough middleware.
  *
- * When Clerk keys exist, export clerkMiddleware() directly so Clerk gets
- * the real NextFetchEvent (avoids the protect-rewrite 404 that happened
- * when we wrapped it in a custom function with a fake event).
+ * Clerk auth is handled entirely on the client side by SafeClerkProvider
+ * and SafeAuthGate. We previously used clerkMiddleware() here, but Clerk v7
+ * does a "protect-rewrite" (returns 404) for unauthenticated users even in
+ * permissive mode, which breaks the app before the sign-in page can load.
  *
- * The middleware itself is PERMISSIVE — it does NOT protect any routes
- * server-side. Instead, client-side SafeAuthGate handles auth gating
- * and redirects unauthenticated users to /sign-in.
- *
- * API routes are excluded from the middleware matcher entirely.
+ * Client-side flow:
+ * 1. SafeClerkProvider loads Clerk JS and initialises auth
+ * 2. SafeAuthGate checks if user is signed in
+ * 3. If not signed in, redirects to /sign-in
+ * 4. Sign-in page renders Clerk's <SignIn /> component
  */
-
-const hasClerkKeys =
-  !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY &&
-  !!process.env.CLERK_SECRET_KEY;
-
-// When Clerk is configured, use clerkMiddleware so Clerk can set up
-// its auth state (cookies, headers) without protecting any routes.
-// When Clerk is NOT configured (guest/preview mode), pass through.
-export default hasClerkKeys
-  ? clerkMiddleware()
-  : function middleware(_req: NextRequest) {
-      return NextResponse.next();
-    };
+export default function middleware(_req: NextRequest) {
+  return NextResponse.next();
+}
 
 // Exclude _next internals, static files, and API routes from middleware
 export const config = {
