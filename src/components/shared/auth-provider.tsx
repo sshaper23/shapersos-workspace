@@ -2,6 +2,7 @@
 
 import {
   type ReactNode,
+  Component,
   useState,
   useEffect,
   createContext,
@@ -39,6 +40,38 @@ export function useAuthState() {
   return useContext(AuthContext);
 }
 
+/* ─── Error Boundary ─── */
+
+/**
+ * Catches errors thrown by ClerkProvider (e.g. failed to load Clerk JS
+ * from the CDN due to DNS issues, ad blockers, or network problems).
+ * Falls back to guest mode so the app is still usable.
+ */
+interface ClerkErrorBoundaryProps {
+  children: ReactNode;
+  fallback: ReactNode;
+}
+interface ClerkErrorBoundaryState {
+  hasError: boolean;
+}
+
+class ClerkErrorBoundary extends Component<ClerkErrorBoundaryProps, ClerkErrorBoundaryState> {
+  constructor(props: ClerkErrorBoundaryProps) {
+    super(props);
+    this.state = { hasError: false };
+  }
+  static getDerivedStateFromError() {
+    return { hasError: true };
+  }
+  componentDidCatch(error: Error) {
+    console.warn("[SafeClerkProvider] Clerk failed to initialise — falling back to guest mode:", error.message);
+  }
+  render() {
+    if (this.state.hasError) return this.props.fallback;
+    return this.props.children;
+  }
+}
+
 /* ─── SafeClerkProvider ─── */
 
 /**
@@ -48,6 +81,8 @@ export function useAuthState() {
  *
  * Also bridges Clerk user data into our AuthContext so downstream components
  * can use `useAuthState()` instead of importing directly from @clerk/nextjs.
+ *
+ * If ClerkProvider throws (e.g. CDN unreachable), falls back to guest mode.
  */
 export function SafeClerkProvider({
   children,
@@ -58,33 +93,48 @@ export function SafeClerkProvider({
 }) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const [clerkModule, setClerkModule] = useState<any>(null);
+  const [importFailed, setImportFailed] = useState(false);
 
   useEffect(() => {
     const key = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY;
     if (key) {
-      import("@clerk/nextjs").then((mod) => {
-        setClerkModule(mod);
-      });
+      import("@clerk/nextjs")
+        .then((mod) => {
+          setClerkModule(mod);
+        })
+        .catch((err) => {
+          console.warn("[SafeClerkProvider] Failed to import @clerk/nextjs:", err);
+          setImportFailed(true);
+        });
     }
   }, []);
 
-  if (clerkModule) {
-    const { ClerkProvider } = clerkModule;
-    return (
-      <ClerkProvider appearance={appearance}>
-        <ClerkBridge clerkModule={clerkModule}>{children}</ClerkBridge>
-      </ClerkProvider>
-    );
-  }
-
-  // No Clerk available — guest mode
-  return (
+  // Guest mode context — shared between guest mode fallback and error fallback
+  const guestContext = (
     <AuthContext.Provider
       value={{ isClerkLoaded: false, clerkUser: { user: null, isLoaded: true } }}
     >
       {children}
     </AuthContext.Provider>
   );
+
+  if (importFailed) {
+    return guestContext;
+  }
+
+  if (clerkModule) {
+    const { ClerkProvider } = clerkModule;
+    return (
+      <ClerkErrorBoundary fallback={guestContext}>
+        <ClerkProvider appearance={appearance}>
+          <ClerkBridge clerkModule={clerkModule}>{children}</ClerkBridge>
+        </ClerkProvider>
+      </ClerkErrorBoundary>
+    );
+  }
+
+  // No Clerk available — guest mode
+  return guestContext;
 }
 
 /**
