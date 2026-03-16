@@ -11,6 +11,9 @@ import {
   Download,
   Square,
   Check,
+  History,
+  Trash2,
+  Clock,
 } from "lucide-react";
 import { saveAs } from "file-saver";
 import { PageHeader } from "@/components/shared/page-header";
@@ -26,6 +29,7 @@ import { StrategistCTA } from "@/components/shared/strategist-cta";
 import { useTier } from "@/hooks/use-tier";
 import { UpgradeGate, ProBadge } from "@/components/shared/upgrade-gate";
 import type { ChatMessage } from "@/types/chat";
+import type { ToolChatSession, SavedChatMessage } from "@/types/context";
 import { cn } from "@/lib/utils";
 
 function ToolIcon({ name, className }: { name: string; className?: string }) {
@@ -37,7 +41,7 @@ export default function ToolPageClient({ params }: { params: Promise<{ slug: str
   const { slug } = use(params);
   const tool = getToolBySlug(slug);
   const router = useRouter();
-  const { state, incrementToolsUsed, addRecentActivity, addFavorite, removeFavorite, isFavorite } = useApp();
+  const { state, incrementToolsUsed, addRecentActivity, addFavorite, removeFavorite, isFavorite, saveToolChatSession, getToolChatSessions, deleteToolChatSession } = useApp();
   const { canAccessTool } = useTier();
 
   const [sidebarSearch, setSidebarSearch] = useState("");
@@ -47,13 +51,49 @@ export default function ToolPageClient({ params }: { params: Promise<{ slug: str
   const [followUpInput, setFollowUpInput] = useState("");
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [hasGeneratedOnce, setHasGeneratedOnce] = useState(false);
-  const [activeTab, setActiveTab] = useState<"start" | "about">("start");
+  const [activeTab, setActiveTab] = useState<"start" | "about" | "history">("start");
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   const { generate, abort, isStreaming, streamedContent, lastUsage } = useAIStream({
     onComplete: () => setHasGeneratedOnce(true),
     toolSlug: slug,
   });
+
+  // Save current messages to chat history
+  const saveCurrentSession = useCallback(
+    (msgs: ChatMessage[]) => {
+      if (!tool || msgs.length === 0) return;
+      const completedMsgs = msgs.filter((m) => !m.isStreaming && m.content);
+      if (completedMsgs.length === 0) return;
+
+      const firstUserMsg = completedMsgs.find((m) => m.role === "user");
+      const title = firstUserMsg
+        ? firstUserMsg.content.slice(0, 80) + (firstUserMsg.content.length > 80 ? "…" : "")
+        : tool.name;
+
+      const sessionId = currentSessionId || crypto.randomUUID();
+      if (!currentSessionId) setCurrentSessionId(sessionId);
+
+      const saved: SavedChatMessage[] = completedMsgs.map((m) => ({
+        id: m.id,
+        role: m.role,
+        content: m.content,
+        timestamp: m.timestamp instanceof Date ? m.timestamp.getTime() : m.timestamp as unknown as number,
+      }));
+
+      saveToolChatSession({
+        id: sessionId,
+        toolSlug: slug,
+        toolName: tool.name,
+        title,
+        messages: saved,
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      });
+    },
+    [tool, slug, currentSessionId, saveToolChatSession]
+  );
 
   const isFormState = messages.length === 0;
 
@@ -104,19 +144,10 @@ export default function ToolPageClient({ params }: { params: Promise<{ slug: str
         tool.systemPrompt
       );
 
-      setMessages((prev) =>
-        prev.map((m) =>
-          m.id === assistantMsg.id
-            ? {
-                ...m,
-                content:
-                  result ||
-                  "No response received — check your API key at /api/health",
-                isStreaming: false,
-              }
-            : m
-        )
-      );
+      const finalContent = result || "No response received — check your API key at /api/health";
+      const updatedMsgs = [userMsg, { ...assistantMsg, content: finalContent, isStreaming: false }];
+      setMessages(updatedMsgs);
+      saveCurrentSession(updatedMsgs);
       incrementToolsUsed();
       if (tool) {
         addRecentActivity({ type: "tool", name: tool.name, slug: tool.slug, action: "Generated" });
@@ -165,13 +196,15 @@ export default function ToolPageClient({ params }: { params: Promise<{ slug: str
     try {
       const result = await generate(conversationHistory, tool.systemPrompt);
 
-      setMessages((prev) =>
-        prev.map((m) =>
+      setMessages((prev) => {
+        const updated = prev.map((m) =>
           m.id === assistantMsg.id
             ? { ...m, content: result, isStreaming: false }
             : m
-        )
-      );
+        );
+        saveCurrentSession(updated);
+        return updated;
+      });
     } catch {
       setMessages((prev) =>
         prev.map((m) =>
@@ -181,7 +214,7 @@ export default function ToolPageClient({ params }: { params: Promise<{ slug: str
         )
       );
     }
-  }, [followUpInput, isStreaming, messages, tool, generate]);
+  }, [followUpInput, isStreaming, messages, tool, generate, saveCurrentSession]);
 
   const resetChat = () => {
     abort();
@@ -190,6 +223,22 @@ export default function ToolPageClient({ params }: { params: Promise<{ slug: str
     setFormValues({});
     setFollowUpInput("");
     setHasGeneratedOnce(false);
+    setCurrentSessionId(null);
+  };
+
+  // Load a saved session from history
+  const loadSession = (session: ToolChatSession) => {
+    const restored: ChatMessage[] = session.messages.map((m) => ({
+      id: m.id,
+      role: m.role,
+      content: m.content,
+      timestamp: new Date(m.timestamp),
+      isStreaming: false,
+    }));
+    setMessages(restored);
+    setCurrentSessionId(session.id);
+    setHasGeneratedOnce(true);
+    setActiveTab("start");
   };
 
   const handleCopy = async (text: string, id: string) => {
@@ -345,6 +394,18 @@ export default function ToolPageClient({ params }: { params: Promise<{ slug: str
           >
             About this Tool
           </button>
+          <button
+            onClick={() => setActiveTab("history")}
+            className={cn(
+              "px-4 py-3 text-sm font-medium transition-colors flex items-center gap-1.5",
+              activeTab === "history"
+                ? "text-[#0ea5e9] border-b-2 border-[#0ea5e9]"
+                : "text-muted-foreground hover:text-foreground"
+            )}
+          >
+            <History className="h-3.5 w-3.5" />
+            History
+          </button>
         </div>
 
         {/* About Tab */}
@@ -398,6 +459,85 @@ export default function ToolPageClient({ params }: { params: Promise<{ slug: str
               >
                 Start Using {tool.name}
               </button>
+            </div>
+          </div>
+        )}
+
+        {/* History Tab */}
+        {activeTab === "history" && (
+          <div className="flex-1 overflow-y-auto p-6">
+            <div className="max-w-2xl mx-auto space-y-4">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-lg font-semibold">Previous Sessions</h2>
+              </div>
+              {(() => {
+                const sessions = getToolChatSessions(slug);
+                if (sessions.length === 0) {
+                  return (
+                    <div className="rounded-xl border border-[hsl(0_0%_100%/0.06)] bg-[hsl(0_0%_100%/0.02)] p-8 text-center">
+                      <History className="h-8 w-8 text-muted-foreground mx-auto mb-3 opacity-40" />
+                      <p className="text-sm text-muted-foreground">
+                        No saved sessions yet. Generate an output and it will appear here automatically.
+                      </p>
+                    </div>
+                  );
+                }
+                return sessions.map((session) => {
+                  const msgCount = session.messages.length;
+                  const lastMsg = session.messages[session.messages.length - 1];
+                  const preview = lastMsg?.role === "assistant"
+                    ? lastMsg.content.slice(0, 120).replace(/[#*_`]/g, "") + (lastMsg.content.length > 120 ? "…" : "")
+                    : "";
+                  const timeStr = new Date(session.updatedAt).toLocaleDateString("en-AU", {
+                    day: "numeric", month: "short", hour: "2-digit", minute: "2-digit",
+                  });
+
+                  return (
+                    <div
+                      key={session.id}
+                      className={cn(
+                        "group rounded-xl border p-4 transition-all cursor-pointer",
+                        session.id === currentSessionId
+                          ? "border-[#0ea5e9]/30 bg-[#0ea5e9]/5"
+                          : "border-[hsl(0_0%_100%/0.06)] bg-[hsl(0_0%_100%/0.02)] hover:border-[hsl(0_0%_100%/0.12)] hover:bg-[hsl(0_0%_100%/0.04)]"
+                      )}
+                      onClick={() => loadSession(session)}
+                    >
+                      <div className="flex items-start justify-between gap-3">
+                        <div className="flex-1 min-w-0">
+                          <p className="text-sm font-medium truncate">{session.title}</p>
+                          {preview && (
+                            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
+                              {preview}
+                            </p>
+                          )}
+                          <div className="flex items-center gap-3 mt-2">
+                            <span className="text-[11px] text-muted-foreground flex items-center gap-1">
+                              <Clock className="h-2.5 w-2.5" />
+                              {timeStr}
+                            </span>
+                            <span className="text-[11px] text-muted-foreground">
+                              {msgCount} message{msgCount !== 1 ? "s" : ""}
+                            </span>
+                          </div>
+                        </div>
+                        <button
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            deleteToolChatSession(session.id);
+                            if (currentSessionId === session.id) {
+                              resetChat();
+                            }
+                          }}
+                          className="p-1.5 rounded-lg text-muted-foreground opacity-0 group-hover:opacity-100 hover:text-red-400 hover:bg-red-500/10 transition-all"
+                        >
+                          <Trash2 className="h-3.5 w-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  );
+                });
+              })()}
             </div>
           </div>
         )}

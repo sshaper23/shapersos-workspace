@@ -19,6 +19,7 @@ import type {
   RecentActivityItem,
   TokenUsageRecord,
   FavoriteMessage,
+  ToolChatSession,
 } from "@/types/context";
 import { aiModels } from "@/data/models";
 
@@ -60,6 +61,7 @@ const defaultState: AppState = {
   aiGenerationsUsed: 0,
   mechanicMessagesThisMonth: 0,
   mechanicMessagesResetAt: null,
+  toolChatSessions: [],
 };
 
 interface AppContextValue {
@@ -135,6 +137,11 @@ interface AppContextValue {
   incrementAIGenerations: () => void;
   incrementMechanicMessages: () => void;
   resetMechanicMessagesIfNeeded: () => void;
+
+  // Tool chat history
+  saveToolChatSession: (session: ToolChatSession) => void;
+  getToolChatSessions: (toolSlug: string) => ToolChatSession[];
+  deleteToolChatSession: (sessionId: string) => void;
 
   // Data management
   clearAllData: () => void;
@@ -838,6 +845,38 @@ export function AppProvider({ children }: { children: ReactNode }) {
     });
   }, []);
 
+  // ─── Tool Chat History ───
+
+  const saveToolChatSession = useCallback((session: ToolChatSession) => {
+    setState((prev) => {
+      const sessions = [...(prev.toolChatSessions || [])];
+      const idx = sessions.findIndex((s) => s.id === session.id);
+      if (idx >= 0) {
+        sessions[idx] = { ...session, updatedAt: Date.now() };
+      } else {
+        sessions.unshift({ ...session, createdAt: Date.now(), updatedAt: Date.now() });
+      }
+      // Keep max 50 sessions to avoid bloating localStorage
+      return { ...prev, toolChatSessions: sessions.slice(0, 50) };
+    });
+  }, []);
+
+  const getToolChatSessions = useCallback(
+    (toolSlug: string): ToolChatSession[] => {
+      return (state.toolChatSessions || [])
+        .filter((s) => s.toolSlug === toolSlug)
+        .sort((a, b) => b.updatedAt - a.updatedAt);
+    },
+    [state.toolChatSessions]
+  );
+
+  const deleteToolChatSession = useCallback((sessionId: string) => {
+    setState((prev) => ({
+      ...prev,
+      toolChatSessions: (prev.toolChatSessions || []).filter((s) => s.id !== sessionId),
+    }));
+  }, []);
+
   const clearAllData = useCallback(() => {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -896,6 +935,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     incrementAIGenerations,
     incrementMechanicMessages,
     resetMechanicMessagesIfNeeded,
+    saveToolChatSession,
+    getToolChatSessions,
+    deleteToolChatSession,
     clearAllData,
   };
 

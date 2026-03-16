@@ -36,6 +36,15 @@ export const PRO_NAV_HREFS: string[] = [
   "/playbooks",
 ];
 
+// ─── Pro-Only Quick Link Keys ───
+// Quick link cards on the home page that require Pro.
+export const PRO_QUICK_LINK_KEYS: string[] = [
+  "TASK_REQUEST_URL",
+  "CREATIVE_SUBMISSIONS_URL",
+  "CAMPAIGN_BRIEF_URL",
+  "CREATIVE_BRIEF_URL",
+];
+
 // ─── Upgrade Copy ───
 // Contextual copy for each gate point so the upgrade modal feels tailored.
 export const UPGRADE_COPY: Record<
@@ -107,6 +116,17 @@ export const UPGRADE_COPY: Record<
       "Audience & avatar deep-dive",
       "Psychographic insights",
       "Complete creative brief foundation",
+    ],
+  },
+  quickLinks: {
+    title: "Unlock Team Submissions",
+    description:
+      "Submit task requests, creative briefs, campaign briefs, and creative assets directly to the Shapers team for execution.",
+    features: [
+      "Task request submissions",
+      "Campaign brief submissions",
+      "Creative brief submissions",
+      "Creative asset submissions for review",
     ],
   },
   mechanisms: {

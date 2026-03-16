@@ -231,6 +231,9 @@ export interface AppState {
   aiGenerationsUsed: number;
   mechanicMessagesThisMonth: number;
   mechanicMessagesResetAt: number | null;
+
+  // Tool chat history
+  toolChatSessions: ToolChatSession[];
 }
 
 export interface RecentActivityItem {
@@ -263,4 +266,24 @@ export interface FavoriteMessage {
   toolName?: string;
   playbookName?: string;
   timestamp: number;
+}
+
+// ─── Tool Chat History ───
+
+export interface SavedChatMessage {
+  id: string;
+  role: "user" | "assistant";
+  content: string;
+  timestamp: number;
+}
+
+export interface ToolChatSession {
+  id: string;
+  toolSlug: string;
+  toolName: string;
+  /** First user message (truncated) — used as the session title */
+  title: string;
+  messages: SavedChatMessage[];
+  createdAt: number;
+  updatedAt: number;
 }

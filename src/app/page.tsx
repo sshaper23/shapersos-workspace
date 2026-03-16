@@ -15,10 +15,13 @@ import {
   ExternalLink,
   Sparkles,
   BarChart3,
+  Lock,
 } from "lucide-react";
 import { useApp } from "@/context/app-context";
 import { computeProgressState } from "@/lib/progressService";
 import { QUICK_LINKS } from "@/config/quickLinks";
+import { PRO_QUICK_LINK_KEYS } from "@/data/tier-config";
+import { useTier } from "@/hooks/use-tier";
 import { cn } from "@/lib/utils";
 
 // ─── Helpers ───
@@ -88,6 +91,7 @@ const leverColors: Record<string, { bg: string; text: string }> = {
 
 export default function HomePage() {
   const { state } = useApp();
+  const { isPro } = useTier();
 
   const progress = computeProgressState(state);
   const firstName = state.northStarData?.name?.split(" ")[0] || "";
@@ -150,6 +154,7 @@ export default function HomePage() {
             const url = QUICK_LINKS[link.key];
             const Icon = link.icon;
             const enabled = !!url;
+            const isLocked = !isPro && PRO_QUICK_LINK_KEYS.includes(link.key);
 
             const inner = (
               <>
@@ -157,13 +162,20 @@ export default function HomePage() {
                   <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-[hsl(0_0%_100%/0.06)]">
                     <Icon className="h-4 w-4 text-muted-foreground" />
                   </div>
-                  {enabled && (
+                  {isLocked ? (
+                    <Lock className="h-3 w-3 text-[#0ea5e9]" />
+                  ) : enabled ? (
                     <ExternalLink className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                  )}
+                  ) : null}
                 </div>
                 <div>
-                  <p className="text-sm font-medium">
+                  <p className="text-sm font-medium flex items-center gap-1.5">
                     {enabled ? link.label : "Coming soon"}
+                    {isLocked && (
+                      <span className="inline-flex items-center gap-1 px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[#0ea5e9]/15 text-[#0ea5e9]">
+                        PRO
+                      </span>
+                    )}
                   </p>
                   <p className="text-xs text-muted-foreground line-clamp-1 mt-0.5">
                     {link.description}
@@ -171,6 +183,19 @@ export default function HomePage() {
                 </div>
               </>
             );
+
+            // Locked for free users — link to upgrade
+            if (isLocked) {
+              return (
+                <Link
+                  key={link.key}
+                  href="/settings#subscription"
+                  className="group flex flex-col gap-3 rounded-xl border p-4 transition-all border-[#0ea5e9]/10 bg-[#0ea5e9]/[0.02] hover:border-[#0ea5e9]/25 hover:bg-[#0ea5e9]/[0.04] cursor-pointer"
+                >
+                  {inner}
+                </Link>
+              );
+            }
 
             return enabled ? (
               <a
