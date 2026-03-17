@@ -36,15 +36,6 @@ export function CreativeIterationPlannerClient() {
     toolSlug: "creative-iteration-planner",
   });
 
-  // Check access
-  if (!canAccessTool("creative-iteration-planner")) {
-    return (
-      <div className="min-h-screen p-6">
-        <UpgradeGate feature="tools" />
-      </div>
-    );
-  }
-
   // ─── State ───
   const [stage, setStage] = useState<Stage>("input");
   const [aiError, setAiError] = useState<string | null>(null);
@@ -139,6 +130,15 @@ Signals: ${diagnosticResult?.signals.map((s) => `[${s.flag}] ${s.message}`).join
     setIterationBrief("");
     setAiError(null);
   }, []);
+
+  // Check access (after all hooks)
+  if (!canAccessTool("creative-iteration-planner")) {
+    return (
+      <div className="min-h-screen p-6">
+        <UpgradeGate feature="tools" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">

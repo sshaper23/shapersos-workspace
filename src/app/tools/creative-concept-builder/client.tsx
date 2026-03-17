@@ -112,15 +112,6 @@ export function CreativeConceptBuilderClient() {
     toolSlug: "creative-concept-builder",
   });
 
-  // Check access
-  if (!canAccessTool("creative-concept-builder")) {
-    return (
-      <div className="min-h-screen p-6">
-        <UpgradeGate feature="tools" />
-      </div>
-    );
-  }
-
   // State
   const [activeLevel, setActiveLevel] = useState(1);
   const [levels, setLevels] = useState<ConceptLevelData>(emptyLevels());
@@ -352,6 +343,15 @@ ${levels.videoExecutions.map((e, i) => `  ${i + 1}. ${e.description} (${e.length
         return null;
     }
   };
+
+  // Check access (after all hooks to satisfy Rules of Hooks)
+  if (!canAccessTool("creative-concept-builder")) {
+    return (
+      <div className="min-h-screen p-6">
+        <UpgradeGate feature="tools" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen">
