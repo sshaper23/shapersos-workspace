@@ -122,7 +122,7 @@ export default function SettingsPage() {
                       "Revenue alignment analysis",
                       "Brand guidelines builder",
                       "Messaging matrix",
-                      "Unlimited The Mechanic chat",
+                      "Unlimited access to The Mechanic",
                       "Notion sync",
                     ].map((feat) => (
                       <li key={feat} className="flex items-center gap-2 text-sm text-muted-foreground">
