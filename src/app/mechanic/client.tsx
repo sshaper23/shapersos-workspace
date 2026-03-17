@@ -140,7 +140,7 @@ export default function MechanicClient() {
       // Track activity
       addRecentActivity({
         type: "tool",
-        name: "Mechanic",
+        name: "The Mechanic",
         slug: "mechanic",
         action: "Asked",
         href: "/mechanic",
@@ -218,7 +218,7 @@ export default function MechanicClient() {
             <Wrench className="h-4 w-4 text-[#0ea5e9]" />
           </div>
           <div>
-            <h1 className="text-sm font-semibold">Mechanic</h1>
+            <h1 className="text-sm font-semibold">The Mechanic</h1>
             <p className="text-[10px] text-muted-foreground">
               Your problem-solving strategist — ask anything about marketing,
               sales, offers, or growth

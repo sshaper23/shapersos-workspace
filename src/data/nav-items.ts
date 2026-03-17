@@ -25,7 +25,7 @@ export const navItems: NavItem[] = [
   { icon: Hammer, href: "/tools", label: "Tools" },
   { icon: Grid3X3, href: "/messaging-matrix", label: "Messaging Matrix", proOnly: true },
   { icon: Play, href: "/playbooks", label: "Playbooks", proOnly: true },
-  { icon: Wrench, href: "/mechanic", label: "Mechanic" },
+  { icon: Wrench, href: "/mechanic", label: "The Mechanic" },
   { icon: Clock, href: "/history", label: "Usage History" },
   {
     icon: Users,

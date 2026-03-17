@@ -155,9 +155,17 @@ export default function NorthStarPage() {
 
   // Determine the suggested next step based on current progress
   const nextStep = useMemo(() => {
+    const hasMatrix = !!state.messagingMatrixState && Object.keys(state.messagingMatrixState.stepOutputs || {}).length > 0;
+
+    if (!hasMatrix) {
+      return {
+        label: "Build Your Messaging Matrix",
+        description: "Your North Star is set. Now map your audience psychology, messaging angles, and positioning into a strategic messaging document.",
+        href: "/messaging-matrix",
+      };
+    }
     const hasBrand = (state.brandGuidelinesProfiles?.length ?? 0) > 0;
     const hasMechanism = (state.mechanisms?.length ?? 0) > 0;
-    const hasMatrix = !!state.messagingMatrixState && Object.keys(state.messagingMatrixState.stepOutputs || {}).length > 0;
 
     if (!hasMechanism) {
       return {
@@ -171,13 +179,6 @@ export default function NorthStarPage() {
         label: "Build Brand Guidelines",
         description: "Create a strategic brand identity through guided AI discovery.",
         href: "/brand-guidelines",
-      };
-    }
-    if (!hasMatrix) {
-      return {
-        label: "Build Your Messaging Matrix",
-        description: "Map your audience psychology and messaging angles into a strategic document.",
-        href: "/messaging-matrix",
       };
     }
     return {

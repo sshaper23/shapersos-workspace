@@ -74,7 +74,7 @@ export const UPGRADE_COPY: Record<
     ],
   },
   mechanic: {
-    title: "Unlimited Mechanic Chat",
+    title: "Unlimited The Mechanic Chat",
     description:
       "Your always-on AI revenue strategist. Get unlimited access to diagnostic conversations, strategic advice, and framework-driven analysis.",
     features: [
