@@ -10,6 +10,8 @@ import {
   Download,
   RotateCcw,
   ChevronRight,
+  ExternalLink,
+  Sheet,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { useApp } from "@/context/app-context";
@@ -556,6 +558,28 @@ export default function MatrixBuildClient() {
                               Start New
                             </button>
                           </div>
+                        </div>
+
+                        {/* Google Sheets Template */}
+                        <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 p-5">
+                          <div className="flex items-center gap-3 mb-2">
+                            <Sheet className="h-5 w-5 text-emerald-400" />
+                            <h4 className="text-sm font-semibold text-emerald-400">
+                              Fill Out Your Messaging Matrix
+                            </h4>
+                          </div>
+                          <p className="text-xs text-muted-foreground mb-3">
+                            Use the Google Sheets template to compile your research into a structured document your team can reference for ads, emails, and landing pages.
+                          </p>
+                          <a
+                            href="https://docs.google.com/spreadsheets/d/1PuQwCTlKwYw37H7q0SqEZfc8iKspi9K4jLeGKggje-o/edit?usp=sharing"
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors"
+                          >
+                            <ExternalLink className="h-3.5 w-3.5" />
+                            Open Google Sheets Template
+                          </a>
                         </div>
 
                         {/* Strategist CTA */}

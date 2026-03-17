@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowRight, Grid3X3, FileText, Trash2 } from "lucide-react";
+import { ArrowRight, Grid3X3, FileText, Trash2, ExternalLink, Sheet } from "lucide-react";
 import { PageHeader } from "@/components/shared/page-header";
 import { useApp } from "@/context/app-context";
 import { matrixSteps } from "@/data/messaging-matrix";
@@ -70,6 +70,32 @@ export default function MessagingMatrixPage() {
               </p>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Messaging Matrix Template */}
+      <div className="rounded-xl border border-[hsl(0_0%_100%/0.06)] bg-[hsl(0_0%_100%/0.02)] p-5 mb-8">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-emerald-500/10">
+              <Sheet className="h-5 w-5 text-emerald-400" />
+            </div>
+            <div>
+              <h3 className="text-sm font-semibold">Messaging Matrix Template</h3>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Download the Google Sheets template to fill out alongside your AI research. Map your answers into a structured document your team can use.
+              </p>
+            </div>
+          </div>
+          <a
+            href="https://docs.google.com/spreadsheets/d/1PuQwCTlKwYw37H7q0SqEZfc8iKspi9K4jLeGKggje-o/edit?usp=sharing"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="shrink-0 inline-flex items-center gap-1.5 px-4 py-2 rounded-lg bg-emerald-500/10 text-emerald-400 text-xs font-medium hover:bg-emerald-500/20 transition-colors"
+          >
+            <ExternalLink className="h-3.5 w-3.5" />
+            Open Template
+          </a>
         </div>
       </div>
 
