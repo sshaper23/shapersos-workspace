@@ -7,6 +7,7 @@ import { useApp } from "@/context/app-context";
 import { matrixSteps } from "@/data/messaging-matrix";
 import { useTier } from "@/hooks/use-tier";
 import { UpgradeGate } from "@/components/shared/upgrade-gate";
+import { VideoWalkthroughBanner } from "@/components/shared/video-walkthrough-banner";
 
 export default function MessagingMatrixPage() {
   const { state, clearMessagingMatrix } = useApp();
@@ -37,6 +38,8 @@ export default function MessagingMatrixPage() {
         title="Messaging Matrix"
         subtitle="A 7-step AI research flow that maps your offer, audience psychology, and messaging angles into a single strategic document."
       />
+
+      <VideoWalkthroughBanner section="messaging-matrix" />
 
       {/* Explanation */}
       <div className="rounded-xl border border-[hsl(0_0%_100%/0.06)] bg-[hsl(0_0%_100%/0.02)] p-6 mb-8">

@@ -18,6 +18,7 @@ import { MarkdownRenderer } from "@/components/shared/markdown-renderer";
 import { useTier } from "@/hooks/use-tier";
 import { UpgradeGate } from "@/components/shared/upgrade-gate";
 import { TIER_LIMITS } from "@/data/tier-config";
+import { VideoWalkthroughBanner } from "@/components/shared/video-walkthrough-banner";
 
 // ─── System Prompt ───
 
@@ -237,6 +238,11 @@ export default function MechanicClient() {
 
       {/* Chat Area */}
       <div className="flex-1 overflow-y-auto">
+        {!hasMessages && (
+          <div className="px-6 pt-4">
+            <VideoWalkthroughBanner section="mechanic" />
+          </div>
+        )}
         {!hasMessages ? (
           /* Empty State */
           <div className="flex flex-col items-center justify-center h-full px-6">

@@ -13,6 +13,7 @@ import { PageHeader } from "@/components/shared/page-header";
 import { useApp } from "@/context/app-context";
 import { useTier } from "@/hooks/use-tier";
 import { UpgradeGate } from "@/components/shared/upgrade-gate";
+import { VideoWalkthroughBanner } from "@/components/shared/video-walkthrough-banner";
 
 const stageTypeColors: Record<string, string> = {
   entry: "bg-blue-500/20 text-blue-400",
@@ -51,6 +52,8 @@ export default function SalesMechanismPage() {
           </Link>
         )}
       </PageHeader>
+
+      <VideoWalkthroughBanner section="sales-mechanism" />
 
       {/* Explanation */}
       <div className="rounded-xl border border-[hsl(0_0%_100%/0.06)] bg-[hsl(0_0%_100%/0.02)] p-6 mb-8">

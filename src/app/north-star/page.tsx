@@ -21,6 +21,7 @@ import { getIcon } from "@/lib/icons";
 import { useApp } from "@/context/app-context";
 import { StrategistCTA } from "@/components/shared/strategist-cta";
 import type { NorthStarData } from "@/types/context";
+import { VideoWalkthroughBanner } from "@/components/shared/video-walkthrough-banner";
 
 function SectionIcon({ name, className }: { name: string; className?: string }) {
   const Icon = getIcon(name);
@@ -550,6 +551,8 @@ export default function NorthStarPage() {
       <div className="flex-1 flex flex-col overflow-hidden">
         <div className="flex-1 overflow-y-auto p-6">
           <div className="max-w-2xl mx-auto">
+            <VideoWalkthroughBanner section="north-star" />
+
             {/* New business CTA if no profiles */}
             {profiles.length === 0 && (
               <div className="mb-6 rounded-xl border border-[#0ea5e9]/20 bg-[#0ea5e9]/5 p-6 text-center">

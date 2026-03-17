@@ -18,6 +18,7 @@ import { ProgressScoreRing } from "@/components/shared/progress-score-ring";
 import { NextStepsPanel } from "@/components/shared/next-steps-panel";
 import { computeProgressState } from "@/lib/progressService";
 import { cn } from "@/lib/utils";
+import { VideoWalkthroughBanner } from "@/components/shared/video-walkthrough-banner";
 
 interface LeverStatus {
   label: string;
@@ -129,6 +130,8 @@ export default function RevenueEnginePage() {
         title="Revenue Engine"
         subtitle="Your three core levers: Offer, Message, and Mechanism"
       />
+
+      <VideoWalkthroughBanner section="revenue-engine" />
 
       {/* Overall Health */}
       <div

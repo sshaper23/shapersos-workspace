@@ -7,6 +7,7 @@ import { useApp } from "@/context/app-context";
 import { cn } from "@/lib/utils";
 import { useTier } from "@/hooks/use-tier";
 import { UpgradeGate } from "@/components/shared/upgrade-gate";
+import { VideoWalkthroughBanner } from "@/components/shared/video-walkthrough-banner";
 
 export default function BrandGuidelinesPage() {
   const {
@@ -40,6 +41,8 @@ export default function BrandGuidelinesPage() {
         title="Brand Guidelines"
         subtitle="Define your brand identity through guided discovery — then let AI synthesise your strategic brand guidelines."
       />
+
+      <VideoWalkthroughBanner section="brand-guidelines" />
 
       {!hasGuidelines ? (
         /* No guidelines yet */

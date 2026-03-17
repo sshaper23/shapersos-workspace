@@ -9,6 +9,7 @@ import { CategorySection } from "@/components/shared/category-section";
 import { ToolCard } from "@/components/tools/tool-card";
 import { tools } from "@/data/tools";
 import { toolSuperCategories } from "@/data/categories";
+import { VideoWalkthroughBanner } from "@/components/shared/video-walkthrough-banner";
 
 /* Build pill-bar categories from super-categories */
 const filterCategories = [
@@ -62,6 +63,8 @@ export default function ToolsPage() {
         title="Tools"
         subtitle="AI-powered tools for your business"
       />
+
+      <VideoWalkthroughBanner section="tools" />
 
       <CategoryFilter
         categories={filterCategories}

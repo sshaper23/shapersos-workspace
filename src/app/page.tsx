@@ -23,6 +23,7 @@ import { QUICK_LINKS } from "@/config/quickLinks";
 import { PRO_QUICK_LINK_KEYS } from "@/data/tier-config";
 import { useTier } from "@/hooks/use-tier";
 import { cn } from "@/lib/utils";
+import { VideoWalkthroughBanner } from "@/components/shared/video-walkthrough-banner";
 
 // ─── Helpers ───
 
@@ -100,6 +101,8 @@ export default function HomePage() {
 
   return (
     <div className="p-6 max-w-[1400px] mx-auto space-y-6">
+      <VideoWalkthroughBanner section="home" />
+
       {/* ─── Row 1: Personalised Header ─── */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <div>

@@ -8,6 +8,7 @@ import { CategorySection } from "@/components/shared/category-section";
 import { FlowCard } from "@/components/flows/flow-card";
 import { flows } from "@/data/flows";
 import { flowCategories, flowCategoryMeta } from "@/data/categories";
+import { VideoWalkthroughBanner } from "@/components/shared/video-walkthrough-banner";
 
 export default function PlaybooksPage() {
   const [search, setSearch] = useState("");
@@ -49,6 +50,8 @@ export default function PlaybooksPage() {
         title="Playbooks"
         subtitle="Guided execution of your proven strategies — follow the steps, get the results"
       />
+
+      <VideoWalkthroughBanner section="playbooks" />
 
       <CategoryFilter
         categories={flowCategories}
