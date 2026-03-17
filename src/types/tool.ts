@@ -34,4 +34,5 @@ export interface Tool {
   systemPrompt: string;
   popular?: boolean;
   isNew?: boolean;
+  customRoute?: boolean;
 }

@@ -43,6 +43,7 @@ import {
   MonitorPlay,
   Grid3X3,
   Route,
+  Repeat,
   type LucideIcon,
 } from "lucide-react";
 
@@ -112,6 +113,9 @@ export const iconMap: Record<string, LucideIcon> = {
   "volume-2": Volume2,
   waypoints: Waypoints,
   "flask-conical": FlaskConical,
+
+  // Creative Tools
+  repeat: Repeat,
 };
 
 export function getIcon(name: string): LucideIcon {

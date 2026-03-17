@@ -5,10 +5,10 @@ export const flows: Flow[] = [
     slug: "hiro-campaign",
     name: "HIRO Campaign Launch",
     icon: "crosshair",
-    description: "Execute the High-Intent Retargeting & Optimization campaign — the demand-capture workhorse of your ad account. Choose between a Testing Ground build (new creative tests) or a Control build (proven winners) with CBO, broad targeting, and manual placements.",
+    description: "Execute the High-Intent Retargeting & Optimization campaign — the demand-capture workhorse of your ad account. Choose between a Testing Ground build (new creative tests) or a Control build (proven winners) with CBO, broad targeting, and manual placements. Now includes Creative Concept Builder integration.",
     shortDescription: "Launch your HIRO demand-capture campaign",
     category: "paid-growth",
-    estimatedTime: "25-35 min",
+    estimatedTime: "30-45 min",
     popular: true,
     campaignConfig: {
       purpose: "Demand capture — convert warm and broad audiences into leads/sales",
@@ -44,6 +44,17 @@ export const flows: Flow[] = [
       },
       {
         stepNumber: 3,
+        title: "Build Creative Concept",
+        toolSlug: "creative-concept-builder",
+        description: "Build your ad concept using the 6-level Creative Concept Framework — angle, copy, treatment, message, persona, and format.",
+        fields: [
+          { name: "angleStatement", label: "Concept Angle", type: "textarea", placeholder: "What is the core angle / thesis of this ad concept? (Or use the Creative Concept Builder tool for the full guided workflow)", required: true },
+          { name: "conceptNotes", label: "Concept Notes", type: "textarea", placeholder: "Any additional notes about copy direction, treatment style, target persona, or format preferences..." },
+        ],
+        systemPrompt: "You are a senior creative strategist helping build an ad concept for a HIRO campaign using the 6-Level Creative Concept Framework.\n\nThe 6 levels are:\n1. ANGLE — The thesis. One sentence that captures the core idea. Everything else serves this.\n2. COPY — Hook, body, CTA. Written to serve the locked angle.\n3. TREATMENT — How this concept looks and feels in production.\n4. MESSAGE — Desire + Awareness Level + Market Sophistication = message direction.\n5. PERSONA — Who this speaks to, their frustration, and what winning looks like for them.\n6. FORMAT — Image, video, or both — with minimum 3 executions per branch.\n\nGuide the user through building their concept systematically. Ask them to lock the angle first before moving to copy. Generate copy variations if they provide enough context. Ensure the concept is specific enough for production handoff.\n\nIMPORTANT: For the full guided wizard experience, recommend they use the Creative Concept Builder tool directly at /tools/creative-concept-builder. This playbook step gives a streamlined version with AI guidance.\n\nFor Testing Ground builds: Concepts enter the Testing Ground ad set. Winners graduate via BEAR system criteria (Hook Rate >30%, Hold Rate >10%).\nFor Control builds: Use concepts that have already graduated.",
+      },
+      {
+        stepNumber: 4,
         title: "Campaign Build Checklist",
         description: "Step-by-step build instructions for Meta Ads Manager — naming conventions, settings, and QA.",
         fields: [
@@ -52,7 +63,7 @@ export const flows: Flow[] = [
         systemPrompt: "You are a Meta Ads execution specialist. Generate the complete HIRO campaign build checklist.\n\nCAMPAIGN LEVEL:\n- Objective: Leads or Sales\n- Budget: CBO (Campaign Budget Optimisation)\n- Naming: [Client] HIRO - [Build Type] - [Offer] - [Date]\n\nAD SET LEVEL:\n- Budget: Uncapped (CBO distributes)\n- Targeting: Broad (age/gender/geo only)\n- Placements: Manual — FB Feed, IG Feed, FB/IG Stories, IG Reels\n- Optimisation: Conversions\n- Attribution: 7-day click, 1-day view\n\nAD LEVEL:\n- For Control builds: Use existing Post IDs for social proof\n- For Testing Ground builds: Create new posts, focus on clean variable isolation\n- UTM parameters for tracking\n- One creative per ad unit\n\nInclude a pre-launch QA checklist covering pixel, events, UTMs, naming, and budget verification.",
       },
       {
-        stepNumber: 4,
+        stepNumber: 5,
         title: "Launch & Monitor Plan",
         description: "Define your launch sequence, monitoring cadence, and kill/scale criteria.",
         fields: [],
@@ -64,10 +75,10 @@ export const flows: Flow[] = [
     slug: "digital-air-cover",
     name: "Digital Air Cover Campaign",
     icon: "radio",
-    description: "Execute the Digital Air Cover campaign — nurture your pipeline and build trust with non-DR content. Retarget warm audiences with educational, social proof, and thought leadership content to stay visible between purchase cycles.",
+    description: "Execute the Digital Air Cover campaign — nurture your pipeline and build trust with non-DR content. Retarget warm audiences with educational, social proof, and thought leadership content. Now includes Creative Concept Builder integration.",
     shortDescription: "Nurture pipeline with non-DR brand content",
     category: "paid-growth",
-    estimatedTime: "25-35 min",
+    estimatedTime: "30-40 min",
     campaignConfig: {
       purpose: "Nurture pipeline, build trust — keep brand visible between purchase cycles",
       objective: "ThruPlays / Reach (NOT conversions)",
@@ -110,6 +121,17 @@ export const flows: Flow[] = [
       },
       {
         stepNumber: 4,
+        title: "Build Creative Concepts",
+        toolSlug: "creative-concept-builder",
+        description: "Build nurture-focused creative concepts using the 6-level framework — optimised for trust and visibility, not direct response.",
+        fields: [
+          { name: "nurtureConcept", label: "Nurture Concept Angle", type: "textarea", placeholder: "What trust-building angle will this concept take? (educational authority, social proof, behind-the-scenes, thought leadership)", required: true },
+          { name: "contentFormat", label: "Primary Content Format", type: "select", options: [{ label: "Video (15-60s)", value: "video" }, { label: "Carousel", value: "carousel" }, { label: "Image + Caption", value: "image" }] },
+        ],
+        systemPrompt: "You are a creative strategist helping build nurture-focused ad concepts for a Digital Air Cover campaign using the 6-Level Creative Concept Framework.\n\nCRITICAL: This is NOT a direct response concept. The angle, copy, and treatment must all be non-sales, trust-building content. No urgency, no hard CTAs. The goal is visibility and trust.\n\nThe 6 levels are:\n1. ANGLE — The thesis. For DAC, angles should be educational, proof-based, or thought leadership.\n2. COPY — Written for engagement, not conversion. Conversational, valuable, human.\n3. TREATMENT — Visual style that feels organic and authentic, not ad-like.\n4. MESSAGE — Lead with value and authority, not desire or urgency.\n5. PERSONA — Same persona as HIRO, but address their educational needs, not purchase intent.\n6. FORMAT — Optimise for ThruPlays (video) or engagement (carousel/image).\n\nFor the full guided wizard experience, recommend the Creative Concept Builder tool at /tools/creative-concept-builder.",
+      },
+      {
+        stepNumber: 5,
         title: "Build & Launch",
         description: "Complete campaign build checklist — ThruPlay optimisation, retargeting setup.",
         fields: [],
@@ -121,10 +143,10 @@ export const flows: Flow[] = [
     slug: "organic-amplifier",
     name: "Organic Amplifier Campaign",
     icon: "volume-2",
-    description: "Execute the Organic Amplifier campaign — put paid spend behind your best-performing organic content to amplify reach. Uses existing Post IDs to preserve social proof and manual placements matching organic performance.",
+    description: "Execute the Organic Amplifier campaign — put paid spend behind your best-performing organic content to amplify reach. Uses existing Post IDs to preserve social proof. Now includes concept analysis for future creative development.",
     shortDescription: "Amplify top organic posts with paid spend",
     category: "paid-growth",
-    estimatedTime: "15-25 min",
+    estimatedTime: "20-30 min",
     campaignConfig: {
       purpose: "Amplify best-performing organic content with paid spend",
       objective: "Engagement / ThruPlays",
@@ -147,6 +169,16 @@ export const flows: Flow[] = [
       },
       {
         stepNumber: 2,
+        title: "Build Amplification Concept",
+        toolSlug: "creative-concept-builder",
+        description: "Define the concept angle for how you'll frame the amplified post — even organic content benefits from structured concept thinking.",
+        fields: [
+          { name: "amplificationAngle", label: "Amplification Angle", type: "textarea", placeholder: "What's the core angle of the post you're amplifying? What made it resonate organically?", required: true },
+        ],
+        systemPrompt: "You are a creative strategist helping refine the concept angle for an Organic Amplifier campaign.\n\nThe user has already identified their top-performing organic posts. Now help them understand WHY those posts worked using the 6-Level Creative Concept Framework:\n\n1. ANGLE — What was the thesis of the post? Why did it resonate?\n2. COPY — What copy elements drove engagement? The hook? The story?\n3. TREATMENT — What visual treatment worked? Authentic/raw? Polished?\n4. MESSAGE — What desire/awareness level did it tap into?\n5. PERSONA — Who engaged most? What does that tell us?\n6. FORMAT — What format worked and should be matched in paid placements?\n\nThis analysis helps inform:\n- Which placements to use (match organic performance)\n- Whether to create similar new concepts for paid (using the Creative Concept Builder at /tools/creative-concept-builder)\n- How to extend the winning angle through iteration\n\nDo NOT suggest modifying the existing post — it preserves social proof via Post ID. Instead, help them understand the concept so they can build net-new concepts from the same angle later.",
+      },
+      {
+        stepNumber: 3,
         title: "Campaign Configuration",
         description: "Set up the amplification campaign — use Post IDs to preserve social proof.",
         fields: [
@@ -156,7 +188,7 @@ export const flows: Flow[] = [
         systemPrompt: "You are a Meta Ads execution specialist configuring the Organic Amplifier campaign.\n\nCRITICAL: Use existing Post IDs to preserve all social proof (likes, comments, shares). Do NOT create new ad posts — use the 'Use Existing Post' option in Ads Manager.\n\nCAMPAIGN SETUP:\n- Objective: Engagement or ThruPlays\n- Budget: $5-20/day per post (small, consistent spend)\n- Targeting: Broad or 1-3% lookalike — keep it wide to maximise new reach\n- Placements: MANUAL — match where the post performed well organically\n  - If it performed on IG Feed → place on IG Feed\n  - If it performed on FB → place on FB Feed\n  - Don't spread across all placements\n\nInclude step-by-step Ads Manager instructions for using existing Post IDs and setting up manual placements.",
       },
       {
-        stepNumber: 3,
+        stepNumber: 4,
         title: "Monitor & Optimise",
         description: "Define success metrics and optimisation triggers for amplified posts.",
         fields: [],
@@ -168,10 +200,10 @@ export const flows: Flow[] = [
     slug: "bridging-offer-campaign",
     name: "Bridging Offer Campaign",
     icon: "waypoints",
-    description: "Execute the Bridging Offer campaign — a low-friction entry offer targeting cold audiences that self-liquidates ad spend and builds a buyer list for your core offer. Includes retargeting layers and upsell sequences.",
+    description: "Execute the Bridging Offer campaign — a low-friction entry offer targeting cold audiences that self-liquidates ad spend and builds a buyer list. Now includes Creative Concept Builder for structured ad development.",
     shortDescription: "Launch a self-liquidating entry offer campaign",
     category: "paid-growth",
-    estimatedTime: "30-40 min",
+    estimatedTime: "35-50 min",
     popular: true,
     campaignConfig: {
       purpose: "Low-friction entry offer — self-liquidate ad spend, build buyer list for core offer",
@@ -205,6 +237,17 @@ export const flows: Flow[] = [
       },
       {
         stepNumber: 3,
+        title: "Build Ad Concepts",
+        toolSlug: "creative-concept-builder",
+        description: "Build structured ad concepts for the bridging offer using the 6-level framework — cold audience optimised.",
+        fields: [
+          { name: "conceptAngle", label: "Primary Concept Angle", type: "textarea", placeholder: "What's the core angle for your bridging offer ads? Lead with the problem or outcome, not the brand.", required: true },
+          { name: "targetAwareness", label: "Audience Awareness Level", type: "select", options: [{ label: "Unaware — don't know they have a problem", value: "unaware" }, { label: "Problem Aware — know the pain", value: "problem-aware" }, { label: "Solution Aware — comparing options", value: "solution-aware" }] },
+        ],
+        systemPrompt: "You are a senior creative strategist building ad concepts for a Bridging Offer campaign using the 6-Level Creative Concept Framework.\n\nCRITICAL CONTEXT: This targets COLD audiences who have NEVER heard of the brand. The bridging offer is a low-ticket entry product ($7-97) designed to self-liquidate ad spend and build a buyer list.\n\nThe 6 levels:\n1. ANGLE — Lead with the problem or outcome. NEVER lead with the brand. Cold audiences don't care who you are yet.\n2. COPY — Hook must stop the scroll in first 3 seconds. Body copy: problem → mechanism → offer → CTA. Keep it tight.\n3. TREATMENT — Must not look like an ad. Think organic-feeling content — raw, authentic, UGC-style performs best for cold.\n4. MESSAGE — Match to awareness level. For cold: problem-aware or unaware messaging. Don't assume they know solutions exist.\n5. PERSONA — Be extremely specific. Not 'business owners' — name the person, their exact situation.\n6. FORMAT — Plan 3+ executions across image and video. Each enters the Testing Ground.\n\nBuild 2-3 distinct concept angles so the Testing Ground has variety. Different angles, not just different creatives.\n\nFor the full guided wizard, recommend /tools/creative-concept-builder.",
+      },
+      {
+        stepNumber: 4,
         title: "Ad Creative & Copy",
         description: "Build the ad creatives and copy angles for cold audience targeting.",
         fields: [
@@ -213,7 +256,7 @@ export const flows: Flow[] = [
         systemPrompt: "You are a Meta Ads copywriter writing ads for a Bridging Offer campaign targeting COLD audiences.\n\nGenerate 5 ad variations, each with:\n- Primary text (3-5 lines max — hook, problem, solution, CTA)\n- Headline (under 40 characters)\n- Description (under 30 characters)\n- Creative direction notes (what the image/video should show)\n\nANGLE FRAMEWORK (use different hooks):\n1. Pain/Problem agitation\n2. Curiosity/Discovery\n3. Social proof/Results\n4. Contrarian/Myth-busting\n5. Direct offer/Value-first\n\nThese ads target people who have NEVER heard of the brand. Lead with the problem or outcome, not the brand name.",
       },
       {
-        stepNumber: 4,
+        stepNumber: 5,
         title: "Campaign Build & Launch",
         description: "Complete the Meta Ads campaign setup — cold targeting, CBO, and self-liquidation tracking.",
         fields: [
@@ -222,7 +265,7 @@ export const flows: Flow[] = [
         systemPrompt: "You are a Meta Ads execution specialist. Generate the complete Bridging Offer campaign build checklist.\n\nCAMPAIGN LEVEL:\n- Objective: Sales (Purchase event) or Leads\n- Budget: CBO — start conservative, scale based on self-liquidation rate\n- Naming: [Client] Bridge - [Offer Name] - [Date]\n\nAD SET LEVEL:\n- Targeting: COLD audiences — broad + interest-based + 1-3% lookalike\n- Placements: All placements (Advantage+) — let Meta optimise for conversions\n- Optimisation: Purchase or Lead event\n\nRETARGETING LAYERS (build separately):\n- Ad set 2: Website visitors who didn't purchase (7-14 day window)\n- Ad set 3: Add-to-cart abandoners\n- DM/Email follow-up sequences for leads who didn't convert\n\nTRACKING:\n- Set up self-liquidation tracking: Revenue from bridge offer vs. ad spend\n- Break-even CPA target = bridge offer price\n- Include UTM parameters and conversion API setup",
       },
       {
-        stepNumber: 5,
+        stepNumber: 6,
         title: "Upsell Sequence & Tracking",
         description: "Set up the post-purchase upsell flow and performance tracking.",
         fields: [],

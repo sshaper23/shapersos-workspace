@@ -20,6 +20,7 @@ import type {
   TokenUsageRecord,
   FavoriteMessage,
   ToolChatSession,
+  ConceptEntry,
 } from "@/types/context";
 import { aiModels } from "@/data/models";
 
@@ -62,6 +63,7 @@ const defaultState: AppState = {
   mechanicMessagesThisMonth: 0,
   mechanicMessagesResetAt: null,
   toolChatSessions: [],
+  conceptLibrary: [],
 };
 
 interface AppContextValue {
@@ -142,6 +144,11 @@ interface AppContextValue {
   saveToolChatSession: (session: ToolChatSession) => void;
   getToolChatSessions: (toolSlug: string) => ToolChatSession[];
   deleteToolChatSession: (sessionId: string) => void;
+
+  // Creative concept library
+  saveConceptEntry: (entry: ConceptEntry) => void;
+  deleteConceptEntry: (id: string) => void;
+  getConceptLibrary: (businessId?: string) => ConceptEntry[];
 
   // Data management
   clearAllData: () => void;
@@ -877,6 +884,37 @@ export function AppProvider({ children }: { children: ReactNode }) {
     }));
   }, []);
 
+  // ─── Creative Concept Library ───
+
+  const saveConceptEntry = useCallback((entry: ConceptEntry) => {
+    setState((prev) => {
+      const library = [...(prev.conceptLibrary || [])];
+      const idx = library.findIndex((c) => c.id === entry.id);
+      if (idx >= 0) {
+        library[idx] = { ...entry, updatedAt: Date.now() };
+      } else {
+        library.unshift({ ...entry, createdAt: Date.now(), updatedAt: Date.now() });
+      }
+      return { ...prev, conceptLibrary: library.slice(0, 50) };
+    });
+  }, []);
+
+  const deleteConceptEntry = useCallback((id: string) => {
+    setState((prev) => ({
+      ...prev,
+      conceptLibrary: (prev.conceptLibrary || []).filter((c) => c.id !== id),
+    }));
+  }, []);
+
+  const getConceptLibrary = useCallback(
+    (businessId?: string): ConceptEntry[] => {
+      const all = state.conceptLibrary || [];
+      if (businessId) return all.filter((c) => c.businessId === businessId);
+      return all;
+    },
+    [state.conceptLibrary]
+  );
+
   const clearAllData = useCallback(() => {
     try {
       localStorage.removeItem(STORAGE_KEY);
@@ -938,6 +976,9 @@ export function AppProvider({ children }: { children: ReactNode }) {
     saveToolChatSession,
     getToolChatSessions,
     deleteToolChatSession,
+    saveConceptEntry,
+    deleteConceptEntry,
+    getConceptLibrary,
     clearAllData,
   };
 

@@ -234,6 +234,9 @@ export interface AppState {
 
   // Tool chat history
   toolChatSessions: ToolChatSession[];
+
+  // Creative concept library
+  conceptLibrary: ConceptEntry[];
 }
 
 export interface RecentActivityItem {
@@ -286,4 +289,64 @@ export interface ToolChatSession {
   messages: SavedChatMessage[];
   createdAt: number;
   updatedAt: number;
+}
+
+// ─── Creative Concept Library ───
+
+export interface ConceptLevelData {
+  // Level 1: Angle
+  angleDescription: string;
+  angleDifferentiator: string;
+  angleType: string;
+  // Level 2: Copy
+  copyAudience: string;
+  copyCoreMesage: string;
+  copyTone: string;
+  copyVariations: string; // AI-generated
+  selectedCopy: string; // User-selected or edited
+  // Level 3: Treatment
+  treatmentPrimary: string;
+  treatmentSecondary: string;
+  // Level 4: Message
+  messageDesire: string;
+  messageAwareness: string;
+  messageSophistication: string;
+  messageSynthesis: string; // AI-generated
+  // Level 5: Persona
+  personaAvatar: string;
+  personaFrustration: string;
+  personaWinning: string;
+  personaTriedBefore: string;
+  // Level 6: Format
+  formatType: string; // "image" | "video" | "both"
+  imageExecutions: { description: string }[];
+  videoExecutions: { description: string; length: string }[];
+}
+
+export interface ConceptEntry {
+  id: string;
+  businessId: string; // scoped to active business
+  name: string;
+  currentLevel: number; // 1-6, tracks progress
+  levels: ConceptLevelData;
+  conceptBrief: string; // AI-generated final brief
+  status: "draft" | "complete";
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface IterationDiagnosticResult {
+  signals: { flag: "warning" | "stop"; message: string }[];
+  recommendation: "iterate" | "new_concept";
+}
+
+export interface IterationPlanInput {
+  conceptName: string;
+  angleStatement: string;
+  winningCopy: string;
+  treatment: string;
+  daysInMarket: string;
+  iterationCycles: number;
+  hookRate: number;
+  producingWinners: boolean;
 }
