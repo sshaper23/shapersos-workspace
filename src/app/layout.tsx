@@ -22,6 +22,10 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Shapers OS — AI-Powered Tools for Entrepreneurs",
   description: "Run AI-powered tools, multi-step workflows, and explore AI features designed for entrepreneurs.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({
