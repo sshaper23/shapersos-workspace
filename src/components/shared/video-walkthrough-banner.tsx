@@ -47,26 +47,26 @@ export function VideoWalkthroughBanner({ section }: VideoWalkthroughBannerProps)
   };
 
   return (
-    <div className="rounded-xl border border-[#0ea5e9]/20 bg-[#0ea5e9]/5 px-4 py-3 mb-6">
+    <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/5 px-4 py-3 mb-6">
       <div className="flex items-center justify-between gap-3">
         <div className="flex items-center gap-3 min-w-0">
           <a
             href={video.url}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#0ea5e9]/20 hover:bg-[#0ea5e9]/30 transition-colors"
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-emerald-500/20 hover:bg-emerald-500/30 transition-colors"
           >
-            <Play className="h-4 w-4 text-[#0ea5e9] ml-0.5" />
+            <Play className="h-4 w-4 text-emerald-400 ml-0.5" />
           </a>
           <div className="min-w-0">
             <a
               href={video.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="text-sm font-medium text-[#0ea5e9] hover:underline"
+              className="text-sm font-medium text-emerald-400 hover:underline"
             >
               {video.title}
-              <span className="ml-1.5 text-[10px] font-normal text-[#0ea5e9]/60">
+              <span className="ml-1.5 text-[10px] font-normal text-emerald-400/60">
                 {video.duration}
               </span>
             </a>
