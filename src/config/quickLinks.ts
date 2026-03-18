@@ -12,4 +12,8 @@ export const QUICK_LINKS = {
   CREATIVE_BRIEF_URL:
     "https://shapers-os.notion.site/2fb36faa779e811fb83bf2f33457ca4c?pvs=105",
   MONDAY_UPDATES_URL: "",
+  QUALITATIVE_FEEDBACK_URL:
+    "https://shapers-os.notion.site/de27e59b800b4827a31598944765ad3c?pvs=105",
+  SALES_RESULTS_URL:
+    "https://shapers-os.notion.site/ff5f103deb304e2882d245652276a061?pvs=105",
 };

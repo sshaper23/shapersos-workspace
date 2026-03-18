@@ -53,6 +53,8 @@ export const PRO_QUICK_LINK_KEYS: string[] = [
   "TASK_REQUEST_URL",
   "CAMPAIGN_BRIEF_URL",
   "CREATIVE_BRIEF_URL",
+  "QUALITATIVE_FEEDBACK_URL",
+  "SALES_RESULTS_URL",
 ];
 
 // ─── Upgrade Copy ───

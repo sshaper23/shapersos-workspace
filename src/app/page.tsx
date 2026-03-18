@@ -7,6 +7,8 @@ import {
   ClipboardList,
   Megaphone,
   PenTool,
+  MessageSquare,
+  TrendingUp,
   Clock,
   Pencil,
   Wrench,
@@ -68,6 +70,18 @@ const quickLinks = [
     icon: PenTool,
     label: "Creative Brief",
     description: "Brief new creative assets for production",
+  },
+  {
+    key: "QUALITATIVE_FEEDBACK_URL" as const,
+    icon: MessageSquare,
+    label: "Qualitative Feedback",
+    description: "Submit qualitative feedback and client insights",
+  },
+  {
+    key: "SALES_RESULTS_URL" as const,
+    icon: TrendingUp,
+    label: "Sales Results",
+    description: "Report weekly sales calls, shows, and closes",
   },
 ];
 
@@ -145,7 +159,7 @@ export default function HomePage() {
         <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
           Quick Links
         </h2>
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {quickLinks.map((link) => {
             const url = QUICK_LINKS[link.key];
             const Icon = link.icon;
