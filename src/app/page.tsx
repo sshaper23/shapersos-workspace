@@ -5,7 +5,6 @@ import Link from "next/link";
 import {
   ArrowRight,
   ClipboardList,
-  Upload,
   Megaphone,
   PenTool,
   Clock,
@@ -58,13 +57,7 @@ const quickLinks = [
     label: "Task Request",
     description: "Submit a task or request to the Shapers team",
   },
-  {
-    key: "CREATIVE_SUBMISSIONS_URL" as const,
-    icon: Upload,
-    label: "Creative Submissions",
-    description: "Submit creative assets for review and approval",
-  },
-  {
+{
     key: "CAMPAIGN_BRIEF_URL" as const,
     icon: Megaphone,
     label: "Campaign Brief",
@@ -152,7 +145,7 @@ export default function HomePage() {
         <h2 className="text-xs font-medium text-muted-foreground uppercase tracking-wider mb-3">
           Quick Links
         </h2>
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {quickLinks.map((link) => {
             const url = QUICK_LINKS[link.key];
             const Icon = link.icon;

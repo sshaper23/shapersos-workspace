@@ -40,7 +40,6 @@ export const PRO_NAV_HREFS: string[] = [
 // Quick link cards on the home page that require Pro.
 export const PRO_QUICK_LINK_KEYS: string[] = [
   "TASK_REQUEST_URL",
-  "CREATIVE_SUBMISSIONS_URL",
   "CAMPAIGN_BRIEF_URL",
   "CREATIVE_BRIEF_URL",
 ];
@@ -126,7 +125,7 @@ export const UPGRADE_COPY: Record<
       "Task request submissions",
       "Campaign brief submissions",
       "Creative brief submissions",
-      "Creative asset submissions for review",
+      "Direct team communication",
     ],
   },
   mechanisms: {
