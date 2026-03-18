@@ -14,13 +14,16 @@ import {
   AlertTriangle,
   Sparkles,
   Check,
+  Cloud,
+  CloudOff,
+  Loader2,
 } from "lucide-react";
 
 export default function SettingsPage() {
   const { clerkUser } = useAuthState();
   const user = clerkUser.user;
   const isLoaded = clerkUser.isLoaded;
-  const { state, clearAllData, setSubscriptionTier } = useApp();
+  const { state, clearAllData, setSubscriptionTier, syncStatus } = useApp();
   const { tier, isPro } = useTier();
   const [showConfirmClear, setShowConfirmClear] = useState(false);
   const [cleared, setCleared] = useState(false);
@@ -157,6 +160,40 @@ export default function SettingsPage() {
             <p className="text-sm font-medium">{LOCKED_MODEL_LABEL}</p>
             <p className="text-xs text-muted-foreground mt-1">
               All tools and playbooks use this model. Optimised for speed, quality, and consistency across the platform.
+            </p>
+          </div>
+        </div>
+
+        {/* Cloud Sync Status */}
+        <div className="rounded-xl border border-[hsl(0_0%_100%/0.06)] bg-[hsl(0_0%_100%/0.02)] overflow-hidden">
+          <div className="flex items-center gap-3 px-5 py-4 border-b border-[hsl(0_0%_100%/0.06)]">
+            <Cloud className="h-4 w-4 text-muted-foreground" />
+            <h3 className="text-sm font-semibold">Cloud Sync</h3>
+            <span className={`ml-auto inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-medium ${
+              syncStatus === "synced"
+                ? "bg-green-500/10 text-green-400"
+                : syncStatus === "saving"
+                  ? "bg-amber-500/10 text-amber-400"
+                  : syncStatus === "loading"
+                    ? "bg-[#0ea5e9]/10 text-[#0ea5e9]"
+                    : syncStatus === "error"
+                      ? "bg-red-500/10 text-red-400"
+                      : "bg-[hsl(0_0%_100%/0.06)] text-muted-foreground"
+            }`}>
+              {syncStatus === "synced" && <><Check className="h-3 w-3" /> Synced</>}
+              {syncStatus === "saving" && <><Loader2 className="h-3 w-3 animate-spin" /> Saving...</>}
+              {syncStatus === "loading" && <><Loader2 className="h-3 w-3 animate-spin" /> Loading...</>}
+              {syncStatus === "error" && <><CloudOff className="h-3 w-3" /> Sync Error</>}
+              {syncStatus === "idle" && <>Local Only</>}
+            </span>
+          </div>
+          <div className="p-5">
+            <p className="text-xs text-muted-foreground">
+              {syncStatus === "synced" || syncStatus === "saving"
+                ? "Your data is backed up to the cloud. Changes sync automatically and persist across devices and browsers."
+                : syncStatus === "error"
+                  ? "Cloud sync encountered an error. Your data is still saved locally. It will retry automatically."
+                  : "Data is stored locally in this browser. Sign in to enable cloud backup and cross-device sync."}
             </p>
           </div>
         </div>

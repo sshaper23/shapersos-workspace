@@ -21,6 +21,17 @@ export const FREE_TOOL_SLUGS: string[] = [
   "meta-ad-copy",
 ];
 
+// ─── Server-side access checks (pure functions, no hooks) ───
+
+export function canAccessToolByTier(slug: string, tier: "free" | "pro"): boolean {
+  if (tier === "pro") return true;
+  return FREE_TOOL_SLUGS.includes(slug);
+}
+
+export function canAccessPlaybookByTier(tier: "free" | "pro"): boolean {
+  return tier === "pro";
+}
+
 // ─── Tier Limits ───
 export const TIER_LIMITS = {
   maxMechanisms: 1,

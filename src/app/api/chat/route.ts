@@ -1,6 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { LOCKED_MODEL } from "@/data/models";
 import { PLATFORM_SKILLS } from "@/data/platform-skills";
+import { canAccessToolByTier, canAccessPlaybookByTier } from "@/data/tier-config";
+import { getSupabaseServer } from "@/lib/supabase/server";
 
 // Allow up to 60 seconds for AI streaming responses (Vercel default is 10s)
 export const maxDuration = 60;
@@ -113,6 +115,45 @@ export async function POST(req: NextRequest) {
       toolSlug,
       playbookSlug,
     } = body;
+
+    // ─── Server-side tier enforcement ───
+    // If Supabase is configured, check the user's tier before processing.
+    // Falls through gracefully if Supabase/Clerk unavailable (dev mode).
+    const supabase = getSupabaseServer();
+    if (supabase) {
+      let userId: string | null = req.headers.get("x-user-id");
+      if (!userId) {
+        try {
+          const { auth } = await import("@clerk/nextjs/server");
+          const result = await auth();
+          userId = result.userId;
+        } catch {
+          // Clerk not available — skip tier check
+        }
+      }
+      if (userId) {
+        const { data: userState } = await supabase
+          .from("user_state")
+          .select("subscription_tier")
+          .eq("user_id", userId)
+          .single();
+
+        const tier = (userState?.subscription_tier as "free" | "pro") ?? "free";
+
+        if (toolSlug && !canAccessToolByTier(toolSlug, tier)) {
+          return NextResponse.json(
+            { error: "Upgrade to Pro to access this tool." },
+            { status: 403 }
+          );
+        }
+        if (playbookSlug && !canAccessPlaybookByTier(tier)) {
+          return NextResponse.json(
+            { error: "Upgrade to Pro to access playbooks." },
+            { status: 403 }
+          );
+        }
+      }
+    }
 
     // Fetch matching skills from the registry
     const skills = await fetchActiveSkills();
