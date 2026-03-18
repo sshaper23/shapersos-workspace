@@ -23,6 +23,18 @@ import type {
   ConceptEntry,
 } from "@/types/context";
 import { aiModels } from "@/data/models";
+import { useAuthState } from "@/components/shared/auth-provider";
+import {
+  toDbNorthStar,
+  toDbBrandGuidelines,
+  toDbMechanism,
+  toDbAlignment,
+  toDbToolChat,
+  toDbConcept,
+  toDbFavorite,
+  toDbActivity,
+  toDbTokenUsage,
+} from "@/lib/supabase/helpers";
 
 const STORAGE_KEY = "shapers-os-state";
 
@@ -152,6 +164,9 @@ interface AppContextValue {
 
   // Data management
   clearAllData: () => void;
+
+  // Supabase sync
+  syncStatus: "idle" | "loading" | "saving" | "synced" | "error";
 }
 
 const AppContext = createContext<AppContextValue | null>(null);
@@ -263,6 +278,8 @@ function migrateToMultiProfile(raw: Record<string, unknown>): Record<string, unk
 export function AppProvider({ children }: { children: ReactNode }) {
   const [state, setState] = useState<AppState>(defaultState);
   const [hydrated, setHydrated] = useState(false);
+  const [syncStatus, setSyncStatus] = useState<"idle" | "loading" | "saving" | "synced" | "error">("idle");
+  const { userId } = useAuthState();
 
   // Hydrate from localStorage on mount — with migration
   useEffect(() => {
@@ -349,6 +366,116 @@ export function AppProvider({ children }: { children: ReactNode }) {
       }
     }
   }, [state, hydrated]);
+
+  // ─── Supabase: Load on first auth ───
+  const [supabaseLoaded, setSupabaseLoaded] = useState(false);
+
+  useEffect(() => {
+    if (!hydrated || !userId || supabaseLoaded) return;
+
+    let cancelled = false;
+    setSyncStatus("loading");
+
+    fetch("/api/user/state", {
+      headers: { "x-user-id": userId },
+    })
+      .then((res) => res.json())
+      .then((json) => {
+        if (cancelled) return;
+        if (json.success && json.data) {
+          // Supabase has data — merge into state (Supabase wins)
+          setState((prev) => ({ ...prev, ...json.data }));
+          setSyncStatus("synced");
+        } else if (json.needsMigration) {
+          // First login — migrate localStorage to Supabase
+          fetch("/api/user/migrate", {
+            method: "POST",
+            headers: { "Content-Type": "application/json", "x-user-id": userId },
+            body: JSON.stringify(state),
+          })
+            .then((res) => res.json())
+            .then((migRes) => {
+              if (!cancelled) {
+                setSyncStatus(migRes.success ? "synced" : "error");
+              }
+            })
+            .catch(() => { if (!cancelled) setSyncStatus("error"); });
+        } else {
+          setSyncStatus("idle");
+        }
+        setSupabaseLoaded(true);
+      })
+      .catch(() => {
+        if (!cancelled) {
+          setSyncStatus("error");
+          setSupabaseLoaded(true);
+        }
+      });
+
+    return () => { cancelled = true; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [hydrated, userId]);
+
+  // ─── Supabase: Debounced sync on state changes ───
+  useEffect(() => {
+    if (!hydrated || !userId || !supabaseLoaded) return;
+
+    const timer = setTimeout(() => {
+      setSyncStatus("saving");
+
+      // Build the user_state scalar patch
+      const userStatePatch = {
+        active_north_star_id: state.activeNorthStarId,
+        active_brand_guidelines_id: state.activeBrandGuidelinesId,
+        active_mechanism_id: state.activeMechanismId,
+        selected_model: state.selectedModel,
+        messaging_matrix_state: state.messagingMatrixState,
+        first_visit_at: state.firstVisitAt,
+        visit_count: state.visitCount,
+        tools_used: state.toolsUsed,
+        playbooks_completed: state.playbooksCompleted,
+        last_active_date: state.lastActiveDate,
+        dismissed_progress_steps: state.dismissedProgressSteps,
+        weekly_focus: state.weeklyFocus,
+        weekly_update: state.weeklyUpdate,
+        cta_dismissed_at: state.ctaDismissedAt,
+        subscription_tier: state.subscriptionTier,
+        ai_generations_used: state.aiGenerationsUsed,
+        mechanic_messages_this_month: state.mechanicMessagesThisMonth,
+        mechanic_messages_reset_at: state.mechanicMessagesResetAt,
+      };
+
+      // Build collection rows with user_id
+      const body: Record<string, unknown> = {
+        userState: userStatePatch,
+        northStarProfiles: state.northStarProfiles.map((p) => toDbNorthStar(p, userId)),
+        brandGuidelinesProfiles: state.brandGuidelinesProfiles.map((p) => toDbBrandGuidelines(p, userId)),
+        mechanisms: state.mechanisms.map((m) => toDbMechanism(m, userId)),
+        alignmentAnalyses: Object.values(state.alignmentAnalyses).map((a) => toDbAlignment(a, userId)),
+        toolChatSessions: state.toolChatSessions.map((s) => toDbToolChat(s, userId)),
+        conceptLibrary: state.conceptLibrary.map((c) => toDbConcept(c, userId)),
+        favorites: state.favorites.map((f) => toDbFavorite(f, userId)),
+        recentActivity: state.recentActivity.map((a) => toDbActivity(a, userId)),
+        tokenUsageHistory: state.tokenUsageHistory.map((t) => toDbTokenUsage(t, userId)),
+      };
+
+      fetch("/api/user/state", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json", "x-user-id": userId },
+        body: JSON.stringify(body),
+      })
+        .then((res) => res.json())
+        .then((json) => {
+          setSyncStatus(json.success ? "synced" : "error");
+        })
+        .catch(() => {
+          setSyncStatus("error");
+        });
+    }, 2000); // 2-second debounce
+
+    return () => clearTimeout(timer);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state, hydrated, userId, supabaseLoaded]);
 
   // ─── North Star — multi-profile ───
 
@@ -980,6 +1107,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     deleteConceptEntry,
     getConceptLibrary,
     clearAllData,
+    syncStatus,
   };
 
   // Hydration guard

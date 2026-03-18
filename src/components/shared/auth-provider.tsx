@@ -26,6 +26,8 @@ interface AuthContextValue {
   isClerkLoaded: boolean;
   /** User data bridged from Clerk — null in guest mode */
   clerkUser: ClerkUserData;
+  /** Clerk user ID (the foreign key for Supabase). Null in guest mode. */
+  userId: string | null;
 }
 
 /* ─── Context ─── */
@@ -33,6 +35,7 @@ interface AuthContextValue {
 const AuthContext = createContext<AuthContextValue>({
   isClerkLoaded: false,
   clerkUser: { user: null, isLoaded: true },
+  userId: null,
 });
 
 /** Read the current auth state. Works in both Clerk and guest mode. */
@@ -112,7 +115,7 @@ export function SafeClerkProvider({
   // Guest mode context — shared between guest mode fallback and error fallback
   const guestContext = (
     <AuthContext.Provider
-      value={{ isClerkLoaded: false, clerkUser: { user: null, isLoaded: true } }}
+      value={{ isClerkLoaded: false, clerkUser: { user: null, isLoaded: true }, userId: null }}
     >
       {children}
     </AuthContext.Provider>
@@ -149,14 +152,15 @@ function ClerkBridge({
   clerkModule: any;
   children: ReactNode;
 }) {
-  // Call useUser from the dynamically-loaded module.
+  // Call useUser and useAuth from the dynamically-loaded module.
   // This is safe — we always render inside ClerkProvider and call
-  // the hook unconditionally at the top of this component.
+  // the hooks unconditionally at the top of this component.
   const { user, isLoaded } = clerkModule.useUser();
+  const authResult = clerkModule.useAuth ? clerkModule.useAuth() : { userId: null };
 
   return (
     <AuthContext.Provider
-      value={{ isClerkLoaded: true, clerkUser: { user, isLoaded } }}
+      value={{ isClerkLoaded: true, clerkUser: { user, isLoaded }, userId: authResult.userId || null }}
     >
       {children}
     </AuthContext.Provider>
