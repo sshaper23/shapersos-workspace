@@ -29,7 +29,7 @@ export const walkthroughVideos: WalkthroughVideo[] = [
     title: "Platform Overview",
     description: "A quick tour of the dashboard, quick links, and how everything connects.",
     duration: "2 min",
-    url: "#",
+    url: "https://youtu.be/a0ue-BliK-E",
   },
   {
     section: "revenue-engine",
