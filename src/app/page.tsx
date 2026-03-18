@@ -20,7 +20,6 @@ import {
 } from "lucide-react";
 import { useApp } from "@/context/app-context";
 import { computeProgressState } from "@/lib/progressService";
-import { QUICK_LINKS } from "@/config/quickLinks";
 import { PRO_QUICK_LINK_KEYS } from "@/data/tier-config";
 import { useTier } from "@/hooks/use-tier";
 import { cn } from "@/lib/utils";
@@ -58,30 +57,35 @@ const quickLinks = [
     icon: ClipboardList,
     label: "Task Request",
     description: "Submit a task or request to the Shapers team",
+    href: "/submissions/task-request",
   },
-{
+  {
     key: "CAMPAIGN_BRIEF_URL" as const,
     icon: Megaphone,
     label: "Campaign Brief",
     description: "Brief a new campaign for the Shapers team to build",
+    href: "/submissions/campaign-brief",
   },
   {
     key: "CREATIVE_BRIEF_URL" as const,
     icon: PenTool,
     label: "Creative Brief",
     description: "Brief new creative assets for production",
+    href: "/submissions/creative-brief",
   },
   {
     key: "QUALITATIVE_FEEDBACK_URL" as const,
     icon: MessageSquare,
     label: "Qualitative Feedback",
     description: "Submit qualitative feedback and client insights",
+    href: "/submissions/qualitative-feedback",
   },
   {
     key: "SALES_RESULTS_URL" as const,
     icon: TrendingUp,
     label: "Sales Results",
     description: "Report weekly sales calls, shows, and closes",
+    href: "/submissions/sales-results",
   },
 ];
 
@@ -161,9 +165,8 @@ export default function HomePage() {
         </h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           {quickLinks.map((link) => {
-            const url = QUICK_LINKS[link.key];
             const Icon = link.icon;
-            const enabled = !!url;
+            const enabled = !!link.href;
             const isLocked = !isPro && PRO_QUICK_LINK_KEYS.includes(link.key);
 
             const inner = (
@@ -175,7 +178,7 @@ export default function HomePage() {
                   {isLocked ? (
                     <Lock className="h-3 w-3 text-[#0ea5e9]" />
                   ) : enabled ? (
-                    <ExternalLink className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ArrowRight className="h-3 w-3 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
                   ) : null}
                 </div>
                 <div>
@@ -208,15 +211,13 @@ export default function HomePage() {
             }
 
             return enabled ? (
-              <a
+              <Link
                 key={link.key}
-                href={url}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={link.href!}
                 className="group flex flex-col gap-3 rounded-xl border p-4 transition-all border-[hsl(0_0%_100%/0.08)] bg-[hsl(0_0%_100%/0.02)] hover:border-[hsl(0_0%_100%/0.15)] hover:bg-[hsl(0_0%_100%/0.04)] cursor-pointer"
               >
                 {inner}
-              </a>
+              </Link>
             ) : (
               <div
                 key={link.key}
